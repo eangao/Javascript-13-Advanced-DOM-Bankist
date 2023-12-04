@@ -64,3 +64,15 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+/////////////////////////////////////////////////////////////////////////
+// How the DOM Really Works
+/////////////////////////////////////////////////////////////////////////
+
+// Let's start this section by learning
+// how the DOM really works behind the scenes
+// and more specifically how the DOM is organized internally.
+// This will make it easier to understand everything else
+// that's gonna follow in this section.
+
+// see pdf lecture
