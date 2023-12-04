@@ -607,3 +607,173 @@ document.addEventListener('keydown', function (e) {
 // which is really what capturing and bubbling is.
 
 // It's events propagating from one place to another.
+
+///////////////////////////////////////////////////////////////
+// Event Propagation in Practice
+///////////////////////////////////////////////////////////////
+
+// rgb(255,255,255)
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min);
+
+const randomColor = () =>
+  `rgb(${randomInt(0, 255)},${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+
+console.log(randomColor());
+
+document.querySelector('.nav__link').addEventListener('click', function (e) {
+  // console.log('LINK');
+
+  //   So we can say this,
+  // and remember that in an event handler
+  // that this keyword, points always to the element
+  // on which that event handler is attached.
+  // document.querySelector('.nav__link')  this link
+  this.style.backgroundColor = randomColor();
+
+  //   And the target is essentially where the event originated.
+  // So where the event first happened.
+  // So this is not the element on which the handler
+  // is actually attached, okay?
+  // So again, this is where the event happened.
+  // So in this case where the click happened,
+  // and it is not the element
+  // on which the event handler was attached.
+  console.log('LINK', e.target, e.currentTarget);
+
+  //   And so you might have noticed
+  // that the currentTarget
+  // is exactly the same as the this keyword.
+  // So, the this keyword
+  // is also the one pointing to the element
+  // on which the EventListener is attached to.
+  console.log(e.currentTarget === this);
+
+  //stop propagation
+  // e.stopPropagation();
+
+  //   Now in practice, that's usually not a good idea
+  // to stop propagation,
+  // but I still showed it to you here
+  // in case you really need it sometime.
+  // So stopping the event propagation like this
+  // can sometimes fix problems in very complex applications
+  // with many handlers for the same events,
+
+  // but in general,
+  // it's not really a good idea
+  // to stop the propagation of events.
+});
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  // console.log('LINK');
+
+  //   and again, keep in mind that this nav_links element
+  // is the parent of this link.
+  // So it's all of this block here.
+  // So when I click this link now here,
+  // what do you think is gonna happen
+  // to the nav_links element
+  // so to that whole container.
+  this.style.backgroundColor = randomColor();
+
+  //   why do you think this is happening?
+  // Well, just as we learned before the event actually happens
+  // at the document root and from there
+  // it then travels down to the target element.
+  // And so in this case, that is this link.
+  // And then from there, it bubbles up.
+  // And bubbling up means that basically it's as if the event
+  // had also happened in all of the parent elements.
+  // And so that is the reason why this exact event
+  // is now also being handled by this event listener here
+  // that is on nav_links,
+
+  console.log('CONTAINER', e.target, e.currentTarget);
+});
+
+// document.querySelector('.nav').addEventListener('click', function (e) {
+//   // console.log('LINK');
+//   this.style.backgroundColor = randomColor();
+//   console.log('NAV', e.target, e.currentTarget);
+// });
+
+// So as we just saw, these three event handlers
+// that we set up here receive events
+// from the target elements
+// and also from the bubbling phase
+
+// Well, as we learned, events are captured
+// when they come down from the document route
+// all the way to the target,
+// but our event handlers are not picking up these events
+// during the capture phase.
+// Remember that?
+
+// So I mentioned that at event listener here,
+// it's only listening for events in the bubbling phase,
+// but not in the capturing phase.
+// So that is the default behavior
+// of the add event listener method,
+// and the reason for that is that the capturing phase
+// is usually irrelevant for us.
+
+// Now, on the other hand, the bubbling phase
+// can be very useful for something called event delegation.
+
+// However, if we really do want to catch events
+// during the capturing phase,
+// we can define a third parameter
+// in the addEventlistener function.
+// For example here,
+// we can set the third parameter to true or false.
+
+document.querySelector('.nav').addEventListener(
+  'click',
+  function (e) {
+    // console.log('LINK');
+    this.style.backgroundColor = randomColor();
+
+    console.log('NAV', e.target, e.currentTarget);
+  },
+  true
+);
+
+// And so in this case where this used capture parameter
+// is set to true,
+// the event handler will no longer listen to bubbling events,
+// but instead, to capturing events.
+// Now, in practice, that's gonna look the same here,
+// but as we take a look here in our log,
+// you will see that now,
+// the NAV is actually the first appearing.
+
+// And the reason for that
+// is that this element is now actually listening
+// for the event as it travels down from the DOM,
+// while these other ones are listening for the event,
+// as it travels back up.
+// And so that happens later
+// and therefore, the NAV is now the first one to show up
+// because this, of course, is the first one to happen.
+// Because first event travels down all the way to the target
+// and only then, it bubbles back up.
+
+// So, as I said, capturing is actually rarely used these days.
+// And the only reason why both capturing
+// and bubbling actually exist,
+// is only for historical reasons.
+// So, from the time where different browsers
+// implemented different versions of JavaScript.
+
+// But anyway, what really matters
+// that you really understand here,
+// is that why these three boxes here
+// get three different background colors,
+// even though the click only happened on this element.
+// And I think I made that really clear in this video
+// and also in the last one.
+
+////////////////////////////////////////////////////////////////////////
+// Event Delegation: Implementing Page Navigation
+////////////////////////////////////////////////////////////////////////
