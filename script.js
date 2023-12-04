@@ -1,12 +1,14 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+///////////////////////////////////////
+// Modal window
 
 const openModal = function (e) {
   //   and not a button and on the link
@@ -63,6 +65,196 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
     closeModal();
   }
+});
+
+///////////////////////////////////////
+// Button scrolling
+btnScrollTo.addEventListener('click', function (e) {
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+
+  console.log(e.target.getBoundingClientRect());
+
+  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+
+  console.log(
+    'height/width viewport',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  // Scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset,
+  //   s1coords.top + window.pageYOffset
+  // );
+
+  //old way of smooth scrolling
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // });
+
+  // modern way smooth scrolling
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+/////////////////////////////////////////////////////////////////////////
+// Page navigation
+
+// // So this will return a node list,
+// // and now we can use it for each method
+// // in order to attach an event handler to each of the elements
+// // that are in the node list.
+// document.querySelectorAll('.nav__link').forEach(function (el) {
+//   el.addEventListener('click', function (e) {
+//     //     And so as we click here then,
+//     // it will automatically move to exactly that section.
+//     // And we can see it here also in the URL bar, right?
+//     // So we basically need to prevent that from happening.
+//     // Let me just put this back here,
+//     // because in our last lecture we deleted this section one
+//     // that was here.
+//     // And so, as I was saying,
+//     // we need to prevent these default behavior.
+//     e.preventDefault();
+//     // console.log('LINK');
+
+//     // scrolling
+//     const id = this.getAttribute('href');
+
+//     //     And so we can now take this, and select an element,
+//     // based on this, and then simply scroll to that element.
+//     // So for that,
+//     // we're gonna use the scrollIntoView method here again.
+//     console.log(id);
+
+//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+//   });
+// });
+
+// Now, as you see, this actually works just fine,
+// but the problem is that it's not really efficient.
+// So we are adding here the exact same callback function,
+// so this event handler here,
+// we are adding it once to each of these three elements.
+// So the exact same function is now attached
+// to these three elements.
+// And that's kind of unnecessary.
+// I mean, of course it would be fine for only three elements,
+// but what if we had 1000, or like 10,000 elements?
+// If we were to attach an event handler
+// to 10,000 elements like this,
+// so like we did here with the forEach function,
+// then we would effectively be creating 10,000 copies
+// of this same function here.
+// And so that would then certainly impact the performance.
+// And it's really just not a clean solution in that case.
+
+// And so, the better solution without a doubt,
+// is to use events delegation.
+// So in event delegation,
+// we use the fact that events bubble up.
+// And we do that by putting the eventListener
+// on a common parent of all the elements
+// that we are interested in.
+// And so in our example,
+// it's this container that's around all of these links,
+// and that we saw in the previous video.
+// So remember, that is this element here.
+// So we will put our event handler on this element here,
+// and then when a user clicks one of the links,
+// the event is generated, and bubbles up,
+// just as we saw in the last video.
+// And then we can basically catch that event
+// in this common parent element, and handle it there.
+// Because we also know where the event actually originated.
+
+//======
+// Event deligation
+
+// All right, so in event delegation,
+// we basically need two steps.
+
+// 1. Add event listener to common parent element
+// 2. Determine what element originated the event
+
+// and so remember the common element of all these links,
+// is nav__links.
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+
+  //   and now we just need to figure out
+  // where the event actually happened.
+  // And remember that, that is stored in event.target,
+  console.log(e.target);
+
+  //   but the click that happens here on this nav__links element,
+  // is not relevant at all.
+
+  //Matching strategy
+
+  // And so now we need a matching strategy here
+  // in order to match only the elements
+  // that we are actually interested in now,
+  // And in this case, the best way to do that,
+  // is to simply check if the target has this nav__link class.
+  if (e.target.classList.contains('nav__link')) {
+    // console.log('LINK');
+
+    // scrolling
+    const id = e.target.getAttribute('href');
+    console.log(id);
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  //   and yeah, we successfully implemented event delegation,
+  // which is a lot better, and a lot more efficient
+  // than simply attaching the same event handler
+  // to multiple elements.
+  // Instead, we simply edit one big event handler function
+  // to the parent element of all the elements
+  // that we're interested in,
+  // and then we simply determined
+  // where the click event came from.
+
+  // And then we also needed this matching strategy
+  // because we wanted to basically ignore clicks
+  // that did not happen right on one of these links.
+
+  // And coming up with this matching strategy,
+  // as I like to call it,
+  // is probably the hardest part
+  // of implementing event delegation.
+
+  // But don't worry because there will be plenty of examples
+  // throughout the rest of the course.
+
+  // And so, at some point,
+  // it will all make a lot of sense to you.
+  // So I hope that you're convinced that event delegation
+  // is a much better strategy,
+  // even though it requires a little bit more work
+  // than the first implementation that we did.
+
+  // And in fact,
+  // there is actually an even more important use case
+  // of event delegation,
+  // which is when we are working with elements
+  // that are not yet on the page on runtime.
+  // So by the time the page loads.
+
+  // And a great example are buttons
+  // that are added dynamically while using the application.
+
+  // So it's not possible to add event handlers
+  // on two elements that do not exist,
+
+  // but we will still be able to handle events
+  // on elements that don't exist at the beginning
+  // by using event delegation one more time.
+  // And we will actually do this later in this section.
 });
 
 /////////////////////////////////////////////////////////////////////////
@@ -612,168 +804,171 @@ document.addEventListener('keydown', function (e) {
 // Event Propagation in Practice
 ///////////////////////////////////////////////////////////////
 
-// rgb(255,255,255)
-const randomInt = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1) + min);
+// // rgb(255,255,255)
+// const randomInt = (min, max) =>
+//   Math.floor(Math.random() * (max - min + 1) + min);
 
-const randomColor = () =>
-  `rgb(${randomInt(0, 255)},${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+// const randomColor = () =>
+//   `rgb(${randomInt(0, 255)},${randomInt(0, 255)}, ${randomInt(0, 255)})`;
 
-console.log(randomColor());
+// console.log(randomColor());
 
-document.querySelector('.nav__link').addEventListener('click', function (e) {
-  // console.log('LINK');
-
-  //   So we can say this,
-  // and remember that in an event handler
-  // that this keyword, points always to the element
-  // on which that event handler is attached.
-  // document.querySelector('.nav__link')  this link
-  this.style.backgroundColor = randomColor();
-
-  //   And the target is essentially where the event originated.
-  // So where the event first happened.
-  // So this is not the element on which the handler
-  // is actually attached, okay?
-  // So again, this is where the event happened.
-  // So in this case where the click happened,
-  // and it is not the element
-  // on which the event handler was attached.
-  console.log('LINK', e.target, e.currentTarget);
-
-  //   And so you might have noticed
-  // that the currentTarget
-  // is exactly the same as the this keyword.
-  // So, the this keyword
-  // is also the one pointing to the element
-  // on which the EventListener is attached to.
-  console.log(e.currentTarget === this);
-
-  //stop propagation
-  // e.stopPropagation();
-
-  //   Now in practice, that's usually not a good idea
-  // to stop propagation,
-  // but I still showed it to you here
-  // in case you really need it sometime.
-  // So stopping the event propagation like this
-  // can sometimes fix problems in very complex applications
-  // with many handlers for the same events,
-
-  // but in general,
-  // it's not really a good idea
-  // to stop the propagation of events.
-});
-
-document.querySelector('.nav__links').addEventListener('click', function (e) {
-  // console.log('LINK');
-
-  //   and again, keep in mind that this nav_links element
-  // is the parent of this link.
-  // So it's all of this block here.
-  // So when I click this link now here,
-  // what do you think is gonna happen
-  // to the nav_links element
-  // so to that whole container.
-  this.style.backgroundColor = randomColor();
-
-  //   why do you think this is happening?
-  // Well, just as we learned before the event actually happens
-  // at the document root and from there
-  // it then travels down to the target element.
-  // And so in this case, that is this link.
-  // And then from there, it bubbles up.
-  // And bubbling up means that basically it's as if the event
-  // had also happened in all of the parent elements.
-  // And so that is the reason why this exact event
-  // is now also being handled by this event listener here
-  // that is on nav_links,
-
-  console.log('CONTAINER', e.target, e.currentTarget);
-});
-
-// document.querySelector('.nav').addEventListener('click', function (e) {
+// document.querySelector('.nav__link').addEventListener('click', function (e) {
 //   // console.log('LINK');
+
+//   //   So we can say this,
+//   // and remember that in an event handler
+//   // that this keyword, points always to the element
+//   // on which that event handler is attached.
+//   // document.querySelector('.nav__link')  this link
 //   this.style.backgroundColor = randomColor();
-//   console.log('NAV', e.target, e.currentTarget);
+
+//   //   And the target is essentially where the event originated.
+//   // So where the event first happened.
+//   // So this is not the element on which the handler
+//   // is actually attached, okay?
+//   // So again, this is where the event happened.
+//   // So in this case where the click happened,
+//   // and it is not the element
+//   // on which the event handler was attached.
+//   console.log('LINK', e.target, e.currentTarget);
+
+//   //   And so you might have noticed
+//   // that the currentTarget
+//   // is exactly the same as the this keyword.
+//   // So, the this keyword
+//   // is also the one pointing to the element
+//   // on which the EventListener is attached to.
+//   console.log(e.currentTarget === this);
+
+//   //stop propagation
+//   // e.stopPropagation();
+
+//   //   Now in practice, that's usually not a good idea
+//   // to stop propagation,
+//   // but I still showed it to you here
+//   // in case you really need it sometime.
+//   // So stopping the event propagation like this
+//   // can sometimes fix problems in very complex applications
+//   // with many handlers for the same events,
+
+//   // but in general,
+//   // it's not really a good idea
+//   // to stop the propagation of events.
 // });
 
-// So as we just saw, these three event handlers
-// that we set up here receive events
-// from the target elements
-// and also from the bubbling phase
+// document.querySelector('.nav__links').addEventListener('click', function (e) {
+//   // console.log('LINK');
 
-// Well, as we learned, events are captured
-// when they come down from the document route
-// all the way to the target,
-// but our event handlers are not picking up these events
-// during the capture phase.
-// Remember that?
+//   //   and again, keep in mind that this nav_links element
+//   // is the parent of this link.
+//   // So it's all of this block here.
+//   // So when I click this link now here,
+//   // what do you think is gonna happen
+//   // to the nav_links element
+//   // so to that whole container.
+//   this.style.backgroundColor = randomColor();
 
-// So I mentioned that at event listener here,
-// it's only listening for events in the bubbling phase,
-// but not in the capturing phase.
-// So that is the default behavior
-// of the add event listener method,
-// and the reason for that is that the capturing phase
-// is usually irrelevant for us.
+//   //   why do you think this is happening?
+//   // Well, just as we learned before the event actually happens
+//   // at the document root and from there
+//   // it then travels down to the target element.
+//   // And so in this case, that is this link.
+//   // And then from there, it bubbles up.
+//   // And bubbling up means that basically it's as if the event
+//   // had also happened in all of the parent elements.
+//   // And so that is the reason why this exact event
+//   // is now also being handled by this event listener here
+//   // that is on nav_links,
 
-// Now, on the other hand, the bubbling phase
-// can be very useful for something called event delegation.
+//   console.log('CONTAINER', e.target, e.currentTarget);
+// });
 
-// However, if we really do want to catch events
-// during the capturing phase,
-// we can define a third parameter
-// in the addEventlistener function.
-// For example here,
-// we can set the third parameter to true or false.
+// // document.querySelector('.nav').addEventListener('click', function (e) {
+// //   // console.log('LINK');
+// //   this.style.backgroundColor = randomColor();
+// //   console.log('NAV', e.target, e.currentTarget);
+// // });
 
-document.querySelector('.nav').addEventListener(
-  'click',
-  function (e) {
-    // console.log('LINK');
-    this.style.backgroundColor = randomColor();
+// // So as we just saw, these three event handlers
+// // that we set up here receive events
+// // from the target elements
+// // and also from the bubbling phase
 
-    console.log('NAV', e.target, e.currentTarget);
-  },
-  true
-);
+// // Well, as we learned, events are captured
+// // when they come down from the document route
+// // all the way to the target,
+// // but our event handlers are not picking up these events
+// // during the capture phase.
+// // Remember that?
 
-// And so in this case where this used capture parameter
-// is set to true,
-// the event handler will no longer listen to bubbling events,
-// but instead, to capturing events.
-// Now, in practice, that's gonna look the same here,
-// but as we take a look here in our log,
-// you will see that now,
-// the NAV is actually the first appearing.
+// // So I mentioned that at event listener here,
+// // it's only listening for events in the bubbling phase,
+// // but not in the capturing phase.
+// // So that is the default behavior
+// // of the add event listener method,
+// // and the reason for that is that the capturing phase
+// // is usually irrelevant for us.
 
-// And the reason for that
-// is that this element is now actually listening
-// for the event as it travels down from the DOM,
-// while these other ones are listening for the event,
-// as it travels back up.
-// And so that happens later
-// and therefore, the NAV is now the first one to show up
-// because this, of course, is the first one to happen.
-// Because first event travels down all the way to the target
-// and only then, it bubbles back up.
+// // Now, on the other hand, the bubbling phase
+// // can be very useful for something called event delegation.
 
-// So, as I said, capturing is actually rarely used these days.
-// And the only reason why both capturing
-// and bubbling actually exist,
-// is only for historical reasons.
-// So, from the time where different browsers
-// implemented different versions of JavaScript.
+// // However, if we really do want to catch events
+// // during the capturing phase,
+// // we can define a third parameter
+// // in the addEventlistener function.
+// // For example here,
+// // we can set the third parameter to true or false.
 
-// But anyway, what really matters
-// that you really understand here,
-// is that why these three boxes here
-// get three different background colors,
-// even though the click only happened on this element.
-// And I think I made that really clear in this video
-// and also in the last one.
+// document.querySelector('.nav').addEventListener(
+//   'click',
+//   function (e) {
+//     // console.log('LINK');
+//     this.style.backgroundColor = randomColor();
+
+//     console.log('NAV', e.target, e.currentTarget);
+//   },
+//   true
+// );
+
+// // And so in this case where this used capture parameter
+// // is set to true,
+// // the event handler will no longer listen to bubbling events,
+// // but instead, to capturing events.
+// // Now, in practice, that's gonna look the same here,
+// // but as we take a look here in our log,
+// // you will see that now,
+// // the NAV is actually the first appearing.
+
+// // And the reason for that
+// // is that this element is now actually listening
+// // for the event as it travels down from the DOM,
+// // while these other ones are listening for the event,
+// // as it travels back up.
+// // And so that happens later
+// // and therefore, the NAV is now the first one to show up
+// // because this, of course, is the first one to happen.
+// // Because first event travels down all the way to the target
+// // and only then, it bubbles back up.
+
+// // So, as I said, capturing is actually rarely used these days.
+// // And the only reason why both capturing
+// // and bubbling actually exist,
+// // is only for historical reasons.
+// // So, from the time where different browsers
+// // implemented different versions of JavaScript.
+
+// // But anyway, what really matters
+// // that you really understand here,
+// // is that why these three boxes here
+// // get three different background colors,
+// // even though the click only happened on this element.
+// // And I think I made that really clear in this video
+// // and also in the last one.
 
 ////////////////////////////////////////////////////////////////////////
 // Event Delegation: Implementing Page Navigation
 ////////////////////////////////////////////////////////////////////////
+
+// Let's now use the power of event bubbling
+// to implement something called event delegation.
