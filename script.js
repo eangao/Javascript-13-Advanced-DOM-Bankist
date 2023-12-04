@@ -297,82 +297,191 @@ document.addEventListener('keydown', function (e) {
 ////////////////////////////////////////////////////////////////////
 // Styles, Attributes and Classes
 ////////////////////////////////////////////////////////////////////
-// Let's now start working on the Bankist website,
-// and we're gonna start by implementing smooth scrolling.
-// And the functionality that we're going to implement now
-// is when we click on this button,
-// then it will smoothly scroll to this first section.
+// // Let's now start working on the Bankist website,
+// // and we're gonna start by implementing smooth scrolling.
+// // And the functionality that we're going to implement now
+// // is when we click on this button,
+// // then it will smoothly scroll to this first section.
 
-// So we're gonna see two ways of doing this.
+// // So we're gonna see two ways of doing this.
 
-// First one a bit more old school,
-// which will allow me to show you a couple of interesting
+// // First one a bit more old school,
+// // which will allow me to show you a couple of interesting
 
-// stuff, and then finally,
-// I will show you the more modern way,
-// which only works in super modern browsers.
+// // stuff, and then finally,
+// // I will show you the more modern way,
+// // which only works in super modern browsers.
 
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
+// const btnScrollTo = document.querySelector('.btn--scroll-to');
+// const section1 = document.querySelector('#section--1');
 
-btnScrollTo.addEventListener('click', function (e) {
-  const s1coords = section1.getBoundingClientRect();
-  console.log(s1coords);
+// btnScrollTo.addEventListener('click', function (e) {
+//   const s1coords = section1.getBoundingClientRect();
+//   console.log(s1coords);
 
-  //   So this BoundingClientRect is basically relative
-  // to this visible view port,
-  console.log(e.target.getBoundingClientRect());
+//   //   So this BoundingClientRect is basically relative
+//   // to this visible view port,
+//   console.log(e.target.getBoundingClientRect());
 
-  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+//   console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
 
-  console.log(
-    'height/width viewport',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
+//   console.log(
+//     'height/width viewport',
+//     document.documentElement.clientHeight,
+//     document.documentElement.clientWidth
+//   );
 
-  // Scrolling
-  // window.scrollTo(
-  //   // However, what happens when I click again?
-  //   // So now it doesn't really work, does it?
-  //   // Well that's because this top here that we specified
-  //   // is always relative to the view port,
-  //   // but not to the document.
-  //   // So not to the top of the page basically,
-  //   s1coords.left + window.pageXOffset,
-  //   s1coords.top + window.pageYOffset
-  // );
-  // //   but the solution to this problem is to simply add
-  // // the current scroll position to the top value.
+//   // Scrolling
+//   // window.scrollTo(
+//   //   // However, what happens when I click again?
+//   //   // So now it doesn't really work, does it?
+//   //   // Well that's because this top here that we specified
+//   //   // is always relative to the view port,
+//   //   // but not to the document.
+//   //   // So not to the top of the page basically,
+//   //   s1coords.left + window.pageXOffset,
+//   //   s1coords.top + window.pageYOffset
+//   // );
+//   // //   but the solution to this problem is to simply add
+//   // // the current scroll position to the top value.
 
-  //   all right, now we can even make this better.
-  // So dot scrollTo again,
-  // because there is a way of making this animation
-  // nice and smooth.
-  // And this works by passing in an object now,
-  // instead of just one argument.
+//   //   all right, now we can even make this better.
+//   // So dot scrollTo again,
+//   // because there is a way of making this animation
+//   // nice and smooth.
+//   // And this works by passing in an object now,
+//   // instead of just one argument.
 
-  //   smooth, all right?
-  // So to implement smooth scrolling like this,
-  // we need to specify an object with the left top
-  // and behavior properties.
+//   //   smooth, all right?
+//   // So to implement smooth scrolling like this,
+//   // we need to specify an object with the left top
+//   // and behavior properties.
 
-  //old way of smooth scrolling
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // });
+//   //old way of smooth scrolling
+//   // window.scrollTo({
+//   //   left: s1coords.left + window.pageXOffset,
+//   //   top: s1coords.top + window.pageYOffset,
+//   //   behavior: 'smooth',
+//   // });
 
-  // modern way smooth scrolling
-  //   But there is a more modern way
-  // and it works like this.
-  section1.scrollIntoView({ behavior: 'smooth' });
-});
+//   // modern way smooth scrolling
+//   //   But there is a more modern way
+//   // and it works like this.
+//   section1.scrollIntoView({ behavior: 'smooth' });
+// });
 
-// And by the way,
-// these client height and width here are not counting
-// with the scroll bars.
-// It's dusty dimensions of the view port,
-// that are actually available for the content.
-// And of course that excludes any scroll bars.
+// // And by the way,
+// // these client height and width here are not counting
+// // with the scroll bars.
+// // It's dusty dimensions of the view port,
+// // that are actually available for the content.
+// // And of course that excludes any scroll bars.
+
+//////////////////////////////////////////////////////////////
+// Types of Events and Event Handlers
+//////////////////////////////////////////////////////////////
+
+// In this lecture and the next ones,
+// we're gonna talk a little bit more about events.
+// Now, we already worked with events before, of course,
+// but now let's add some more important concepts
+// and also make things a bit more clear.
+// So, an event is basically a signal
+// that is generated by a certain dumb node
+// and a signal means that something has happened,
+// for example, a click somewhere or the mouse moving,
+// or the user triggering the full screen mode
+// and really anything of importance,
+// that happens on our webpage, generates an event.
+
+// that event will always happen when a user clicks.
+// So, it doesn't matter if we're actually
+// listening for it or not.
+const h1 = document.querySelector('h1');
+
+// o, the mouseenter event here,
+// is a little bit like the hover event in CSS.
+// So, it fires whenever a mouse enters a certain element.
+// h1.addEventListener('mouseenter', function (e) {
+//   alert('addEventListener: Great! You are reading the heading :D');
+// });
+
+// mdn event reference
+// https://developer.mozilla.org/en-US/docs/Web/Events
+
+// but anyway, let me now show you another way
+// of attaching an EventListener to an element.
+// And that is by using the so-called on-event property
+// directly on the element.
+// So for example, when we want to listen for mouseenter,
+// there is a property called onmouseenter,
+// h1.onmouseenter = function (e) {
+//   alert('addEventListener: Great! You are reading the heading :D');
+// };
+
+// However, this way of listening to events
+// is a bit old school.
+// So, it used to be done like this in the old days,
+
+// but now we usually always use addEventListener.
+// So, I'm just showing you this in case you ever come across
+// this way of listening for events.
+
+// Now, there are two ways why addEventListener is better.
+// And the first one is that it allows us to add
+// multiple event listeners to the same event.
+
+// And the second one even more important
+// is that we can actually remove an event handler
+// in case we don't need it anymore.
+// And this is something that we hadn't done before,
+// but it's actually very simple
+// and very useful from time to time.
+
+const alertH1 = function (e) {
+  alert('addEventListener: Great! You are reading the heading :D');
+
+  //   So, after we listened for an event
+  // and then handle that event here in dysfunction,
+  // we can then remove that event listener.
+
+  // but of course this doesn't have to be in here.
+  // h1.removeEventListener('mouseenter', alertH1);
+};
+h1.addEventListener('mouseenter', alertH1);
+
+// So you can remove the EventListener
+// at any place in our code.
+
+// For example, we could remove it
+// after a certain time has passed.
+// So, let's use set time out here
+// and a simple arrow function.
+// And let's say, that after three seconds have passed,
+// we want to remove the EventListener.
+
+setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
+
+// Finally, there's also a third way of handling events,
+// which is by using an HTML attribute.
+
+// Now this one should actually not be used,
+// but just for the sake of curiosity
+// I'm gonna show it to you here.
+
+// So, let's actually this time use the onclick,
+// just to, we have a different one.
+// But so, this is quite similar to what we did here before
+// in the JavaScript with the onmouseenter.
+// We're simply defining it directly in HTML.
+// Then here, we basically specify a string
+// and then we say what we want to happen.
+// So, this is pretty weird, but well,
+// this is kind of old school JavaScript
+// from the early days, alert.
+// And so, now when we click here,
+// then we get HTML alert.
+// But anyway, we don't need to bother with this one,
+// but I'm just gonna leave it here for you as a reference.
+
+// <h1 onClick="alert('HTML alert')">
