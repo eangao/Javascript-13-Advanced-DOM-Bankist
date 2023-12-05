@@ -7,6 +7,13 @@ const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
 
+const nav = document.querySelector('.nav');
+
+// Tabbed component
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
 ///////////////////////////////////////
 // Modal window
 
@@ -259,9 +266,6 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 
 ////////////////////////////////////////////////////////
 // Tabbed component
-const tabs = document.querySelectorAll('.operations__tab');
-const tabsContainer = document.querySelector('.operations__tab-container');
-const tabsContent = document.querySelectorAll('.operations__content');
 
 // doing this here is a bad practice
 // because what if we had like 200 tabs?
@@ -276,6 +280,12 @@ const tabsContent = document.querySelectorAll('.operations__content');
 tabsContainer.addEventListener('click', function (e) {
   const clicked = e.target.closest('.operations__tab');
   // console.log(clicked);
+  //   So that was the reason why we needed
+  // the closest method here in this tabs
+  // because we had this button,
+  // but then we could also click on the span element.
+  // And so here we then needed to find the closest element.
+  // So the closest button to both of these places,
 
   // Guard clause
   if (!clicked) return;
@@ -311,6 +321,167 @@ tabsContainer.addEventListener('click', function (e) {
     // Remember, so it's just tab.
     .querySelector(`.operations__content--${clicked.dataset.tab}`)
     .classList.add('operations__content--active');
+});
+
+///////////////////////////////
+// Menu fade animation
+
+// But now, of course, we do not want to attach
+// an event listener to each of these links.
+// So we already know that we should do
+// event delegation here instead.
+
+// So let's find the common parent element
+// of all of the links,
+// and also, including the logo there.
+// So if we were only working with the links,
+// it would be this element,
+// but we also want to work with the logo here.
+// And so let's actually use this entire navigation here
+// as our parent container on which we will handle the event
+// that is gonna bubble up from the links.
+// So keep in mind that all of this works
+// because events bubble up from their target.
+
+//nav transfer to the upper of the page
+
+// the mouse enter event,
+// and mouseover is actually similar to mouseenter,
+// with the big difference that mouseenter
+// does not bubble, okay?
+// But here, we need the event to actually bubble
+// so that it can even reach the navigation element.
+
+// and there are also kind of opposite events
+// of mouseover and mouseenter.
+// And we use these to basically undo
+// what we do on the hover.
+// So the opposite of mouseenter is mouseleave,
+// and the opposite of this mouseover is mouseout.
+nav.addEventListener('mouseover', function (e) {
+  //   So, you see that this time around,
+  // I'm not using the closest methods.
+  // And that's because there are simply no child elements
+  // that we could accidentally click here
+  // in this link, right?
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+
+    //     And so now we would have to move up manually,
+    // not just once, but twice.
+    // And so instead of doing that,
+    // we will again use the closest method, okay?
+    // So again, instead of moving up manually,
+    // like one or two steps, we can simply search for a parent
+    // which matches a certain query.
+
+    //     Even though that's not the closest parent,
+    // I mean, there is another parent to these links,
+    // which is this one here.
+    // But it's no problem of also choosing
+    // an even higher up parent like we are doing here.
+    // So we are now at a parent of all of the links,
+
+    //     and so now from there,
+    // we can search for the nav_links again.
+    // And so these are then going to be the siblings
+    // of our initial links.
+    // And so, as we already learned before,
+    // we can use query selector on an element to search
+    // for a certain query only in that element.
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+
+    //     And now, let's actually also select the logo,
+    // and we could select it manuall also,
+    // by its class name, but let's just suppose
+    // that there are many navigations on this page.
+    // And so, again, to make the solution really robust,
+    // it's best to simply move up to the closest parent,
+    // in this case, the navigation.,
+    // and then from there, we simply search for an image.
+    const logo = link.closest('.nav').querySelector('img');
+
+    // now we just need to change the opacity,
+    siblings.forEach(el => {
+      //       and now we actually need to do
+      // that comparison that we did before.
+      // So checking if the current element is not the link itself.
+      // Because of course, this sibling here
+      // so these siblings, they will contain
+      // or initial link as well.
+      // So it needs to be different from link.
+
+      // But then for all the others that are not the original link,
+      // we want to change the opacity to 0.5.
+      // And indeed, we want to do the same with the logo.
+      if (el !== link) el.style.opacity = 0.5;
+    });
+
+    logo.style.opacity = 0.5;
+  }
+});
+
+nav.addEventListener('mouseout', function (e) {
+  //   So, you see that this time around,
+  // I'm not using the closest methods.
+  // And that's because there are simply no child elements
+  // that we could accidentally click here
+  // in this link, right?
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+
+    //     And so now we would have to move up manually,
+    // not just once, but twice.
+    // And so instead of doing that,
+    // we will again use the closest method, okay?
+    // So again, instead of moving up manually,
+    // like one or two steps, we can simply search for a parent
+    // which matches a certain query.
+
+    //     Even though that's not the closest parent,
+    // I mean, there is another parent to these links,
+    // which is this one here.
+    // But it's no problem of also choosing
+    // an even higher up parent like we are doing here.
+    // So we are now at a parent of all of the links,
+
+    //     and so now from there,
+    // we can search for the nav_links again.
+    // And so these are then going to be the siblings
+    // of our initial links.
+    // And so, as we already learned before,
+    // we can use query selector on an element to search
+    // for a certain query only in that element.
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+
+    //     And now, let's actually also select the logo,
+    // and we could select it manuall also,
+    // by its class name, but let's just suppose
+    // that there are many navigations on this page.
+    // And so, again, to make the solution really robust,
+    // it's best to simply move up to the closest parent,
+    // in this case, the navigation.,
+    // and then from there, we simply search for an image.
+    const logo = link.closest('.nav').querySelector('img');
+
+    // now we just need to change the opacity,
+    siblings.forEach(el => {
+      //       and now we actually need to do
+      // that comparison that we did before.
+      // So checking if the current element is not the link itself.
+      // Because of course, this sibling here
+      // so these siblings, they will contain
+      // or initial link as well.
+      // So it needs to be different from link.
+
+      // But then for all the others that are not the original link,
+      // we want to change the opacity to 0.5.
+      // And indeed, we want to do the same with the logo.
+      if (el !== link) el.style.opacity = 0.5;
+    });
+
+    logo.style.opacity = 0.5;
+  }
 });
 
 /////////////////////////////////////////////////////////////////////////
@@ -1243,3 +1414,16 @@ tabsContainer.addEventListener('click', function (e) {
 // But anyway, I hope that this was fun
 // and that make sure to understand what we did here
 // including the HTML and CSS.
+
+//////////////////////////////////////////////////////
+// Passing Arguments to Event Handlers
+//////////////////////////////////////////////////////
+
+// Let's now create a nice effect
+// on our page navigation,
+// where all the links fade out when we hover
+// over one of them, except for the link
+// that we actually hovered over.
+// And this will teach us something really valuable,
+// which is how to pass arguments
+// into event handler functions.
