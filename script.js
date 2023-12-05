@@ -526,6 +526,34 @@ nav.addEventListener('mouseover', handleHover.bind(0.5));
 
 nav.addEventListener('mouseout', handleHover.bind(1));
 
+////////////////////////////////////////////
+// A Better Way: The Intersection Observer API
+
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+// console.log(navHeight);
+
+const stickyNav = function (entries) {
+  const [entry] = entries; //same as entries[0]
+  // console.log(entry);
+
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+
+  // Indeed, now the navigation appeared exactly 90 pixels
+  // before the threshold was actually reached.
+  // rootMargin: '-90px', //rem and percent does not work
+
+  rootMargin: `-${navHeight}px`, //to make height dynamic
+});
+
+headerObserver.observe(header);
+
 /////////////////////////////////////////////////////////////////////////
 // How the DOM Really Works
 /////////////////////////////////////////////////////////////////////////
@@ -1474,67 +1502,169 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 // Implementing a Sticky Navigation: The Scroll Event
 //////////////////////////////////////////////////////
 
-// Let's implement another pretty common feature
-// on webpages, which is that the navigation bar
-// becomes attached to the top of the page
-// after we scroll to a certain point.
-// And this is called a sticky navigation.
+// // Let's implement another pretty common feature
+// // on webpages, which is that the navigation bar
+// // becomes attached to the top of the page
+// // after we scroll to a certain point.
+// // And this is called a sticky navigation.
 
-const initialCoords = section1.getBoundingClientRect();
-console.log(initialCoords);
+// const initialCoords = section1.getBoundingClientRect();
+// console.log(initialCoords);
 
-// So, the scroll event is available on Window.
-// All right.
-// So, not document, but really window.addeventlistener
-// and then scroll.
-// Okay.
-// So, this event will be fired off
-// each time that we scroll on our page.
+// // So, the scroll event is available on Window.
+// // All right.
+// // So, not document, but really window.addeventlistener
+// // and then scroll.
+// // Okay.
+// // So, this event will be fired off
+// // each time that we scroll on our page.
 
-// So, to scroll event is not really efficient
-// and usually it should be avoided.
-// But again for now, let's use that.
-window.addEventListener('scroll', function (e) {
-  // console.log(e);
+// // So, to scroll event is not really efficient
+// // and usually it should be avoided.
+// // But again for now, let's use that.
+// window.addEventListener('scroll', function (e) {
+//   // console.log(e);
 
-  console.log(window.scrollY);
+//   console.log(window.scrollY);
 
-  //   But now the question is, when exactly should
-  // the navigation actually become sticky?
-  // Well, it should happen here as soon as we reach
-  // the first section.
+//   //   But now the question is, when exactly should
+//   // the navigation actually become sticky?
+//   // Well, it should happen here as soon as we reach
+//   // the first section.
 
-  //   the size of this element that comes before
-  // is actually dependent on the view port size.
-  // So, if I do this, then you see that
-  // the first section starts way earlier, so like at 300.
-  // And so we cannot hard coat to value
-  // and therefore we need to calculate it dynamically.
+//   //   the size of this element that comes before
+//   // is actually dependent on the view port size.
+//   // So, if I do this, then you see that
+//   // the first section starts way earlier, so like at 300.
+//   // And so we cannot hard coat to value
+//   // and therefore we need to calculate it dynamically.
 
-  if (window.scrollY > initialCoords.top) {
-    nav.classList.add('sticky');
-    console.log('add sticky');
-  } else {
-    nav.classList.remove('sticky');
-    console.log('remove sticky');
-  }
-});
+//   if (window.scrollY > initialCoords.top) {
+//     nav.classList.add('sticky');
+//     console.log('add sticky');
+//   } else {
+//     nav.classList.remove('sticky');
+//     console.log('remove sticky');
+//   }
+// });
 
-// So, this works just fine now, but as I mentioned before,
-// this is pretty bad for performance.
-// So, using the scroll event for performing a certain action
-// at a certain position of the page
-// is really not the way to go.
-// And again, that's because the scroll event here
-// fires all the time, no matter how small
-// the change is here in the scroll.
-// And so that makes for a pretty bad performance
-// and especially on mobile.
-// Like on the modern computer, of course,
-// you're not gonna notice anything,
-// but if you're using this page maybe on an older smartphone,
-// then it's not gonna be so nice.
-// All right.
-// And so in the next video, we're gonna look at a better
-// and way more efficient tool,
-// which is the intersection of server API.
+// // So, this works just fine now, but as I mentioned before,
+// // this is pretty bad for performance.
+// // So, using the scroll event for performing a certain action
+// // at a certain position of the page
+// // is really not the way to go.
+// // And again, that's because the scroll event here
+// // fires all the time, no matter how small
+// // the change is here in the scroll.
+// // And so that makes for a pretty bad performance
+// // and especially on mobile.
+// // Like on the modern computer, of course,
+// // you're not gonna notice anything,
+// // but if you're using this page maybe on an older smartphone,
+// // then it's not gonna be so nice.
+// // All right.
+// // And so in the next video, we're gonna look at a better
+// // and way more efficient tool,
+// // which is the intersection of server API.
+
+//////////////////////////////////////////////////////
+// A Better Way: The Intersection Observer API
+//////////////////////////////////////////////////////
+
+// // So let's now implement the same sticky navigation
+// // that we implemented in the last video,
+// // but this time, using the new intersection observer API.
+// // But what actually is the intersection observer API,
+// // and why is it so helpful?
+// // Well, this API allows our code to basically
+// // observe changes to the way that a certain target element
+// // intersects another element, or the way
+// // it intersects the viewport.
+// // And so from this definition alone,
+// // I think you can see that this will actually
+// // be useful in implementing our sticky navigation.
+// // But let's actually start this video by learning
+// // how the intersection observer API actually works,
+// // but without our sticky navigation,
+// // because at the beginning, this can seem
+// // a bit intimidating and confusing, okay?
+
+// const obsCallback = function (entries, observer) {
+//   //   So this callback function here will get called
+//   // each time that the observed element,
+//   // so our target element here, is intersecting
+//   // the root element at the threshold that we defined, okay?
+//   // So take note of this because this is actually
+//   // a bit hard to figure out from reading the documentation.
+//   // And so it's a good idea to keep note
+//   // of what I'm saying here.
+
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   });
+// };
+
+// const obsOptions = {
+//   // this object needs
+//   // first a root property.
+//   // And this root is the element
+//   // that the target is intersecting.
+//   // So again, this here is the target,
+//   // and the root element will be the element
+//   // that we want our target element to intersect.
+//   // And again, this will all make more sense
+//   // once you see this in action.
+//   // So we could now here select an element
+//   // or as an alternative, we can write null,
+//   // and then we will be able to observe our target element
+//   // intersecting the entire viewport, all right?.
+//   // So basically, this entire rectangle here,
+//   // which shows the current portion of the page, okay?
+//   root: null,
+
+//   // And then second, we can define a threshold.
+//   // Threshold, and this is basically the percentage
+//   // of intersection at which
+//   // the observer callback will be called,
+//   // so this callback here.
+//   // So again that's very confusing,
+//   // let's just set it to 10%, which is 0.1,
+
+//   //   So you can think of this threshold here
+//   // at the percentage that we want to have visible in our root.
+//   // So in our viewport in this case
+//   // threshold: 0.1,
+
+//   //   Now what I'm gonna do here is to now specify an array,
+//   // so to specify different thresholds,
+//   // and one of them is gonna be zero,
+//   // and the other one 0.2, so that's 20%.
+//   // So 0% here means that basically our callback
+//   // will trigger each time that the target element
+//   // moves completely out of the view,
+//   // and also as soon as it enters the view,
+//   // threshold: [0, 0.2],
+
+//   //   On the other hand, if we specified one here,
+//   // like this, then that means that the callback
+//   // will only be called when 100% of the target
+//   // is actually visible in the viewport.
+//   // So in the case of this section one,
+//   // that would be impossible because the section itself
+//   // is already bigger than the viewport.
+//   // threshold: [0, , 1, 0.2],
+
+//   threshold: [0, 0.2],
+// };
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
+// // When do we want our navigation to become sticky?
+// // Well, we want that to happen essentially
+// // when the header moves completely out of view.
+// // So basically, all of this part here,
+// // which is the header, when we can no longer see it,
+// // that's when we want then to display the navigation, okay?
+// // And so this time, we are going
+// // to observe the header element.
