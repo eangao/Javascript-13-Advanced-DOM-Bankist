@@ -78,17 +78,17 @@ document.addEventListener('keydown', function (e) {
 // Button scrolling
 btnScrollTo.addEventListener('click', function (e) {
   const s1coords = section1.getBoundingClientRect();
-  console.log(s1coords);
+  // console.log(s1coords);
 
-  console.log(e.target.getBoundingClientRect());
+  // console.log(e.target.getBoundingClientRect());
 
-  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+  // console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
 
-  console.log(
-    'height/width viewport',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
+  // console.log(
+  //   'height/width viewport',
+  //   document.documentElement.clientHeight,
+  //   document.documentElement.clientWidth
+  // );
 
   // Scrolling
   // window.scrollTo(
@@ -195,7 +195,7 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   //   and now we just need to figure out
   // where the event actually happened.
   // And remember that, that is stored in event.target,
-  console.log(e.target);
+  // console.log(e.target);
 
   //   but the click that happens here on this nav__links element,
   // is not relevant at all.
@@ -212,7 +212,7 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 
     // scrolling
     const id = e.target.getAttribute('href');
-    console.log(id);
+    // console.log(id);
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
 
@@ -559,7 +559,7 @@ const allSections = document.querySelectorAll('.section');
 
 const revealSection = function (entries, observer) {
   const [entry] = entries;
-  console.log(entry);
+  // console.log(entry);
 
   if (!entry.isIntersecting) return;
 
@@ -580,6 +580,44 @@ allSections.forEach(function (section) {
   sectionObserver.observe(section);
   section.classList.add('section--hidden');
 });
+
+////////////////////////////////////////////
+// Lazy loading images
+const imgTargets = document.querySelectorAll('img[data-src]');
+// console.log(imgTargets);
+
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  // console.log(entry);
+
+  if (!entry.isIntersecting) return;
+
+  // Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null, //null -> entire viewport
+  threshold: 0,
+
+  //   as we did previously here with the navigation.
+  // So to make the navigation load a little bit
+  // before the threshold was actually reached
+  // and here we are doing the same
+  // so exactly 200 pixels before any of the images is loaded.
+  // It should already start loading.
+  // And by doing that we don't see any delay
+  // in loading when we browse the page.
+  rootMargin: '200px',
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
 
 /////////////////////////////////////////////////////////////////////////
 // How the DOM Really Works
@@ -1708,3 +1746,52 @@ allSections.forEach(function (section) {
 // And you can, in fact,
 // easily implement it without any external library.
 // So the effect that I mean is this one
+
+////////////////////////////////////////////////////////////////
+// Lazy Loading Images
+////////////////////////////////////////////////////////////////
+
+// One of the most important things
+// when building any website is performance.
+// And images have by far the biggest impact on page loading.
+// And so it's very important
+// that images are optimized on any page.
+// And for that,
+// we can use a strategy called Lazy Loading Images.
+// So, let me show you now
+// how to implement that strategy in JavaScript.
+
+// So, the main ingredient to this lazy loading strategy
+// is that we have a very low resolution image,
+// which is really small and which is loaded,
+// right in the beginning.
+// So that's this image here, and you'll see
+// that the dimensions are only 200 times 120 in this case.
+// So let's actually take a look at that image here.
+// And so, you see it's really small
+// and it's only 16 kilobytes while the real one,
+// so this one called digital, is almost half a megabyte.
+// So that's a huge difference
+
+// So, let's implement this and that's actually not too hard
+// using the Intersection Observer API, one more time.
+// So lazy loading images and so once again,
+// this one is really great for performance
+// while the other things we did so far are more visual things.
+// This one really impacts how your site works and especially
+// for your users who might have a slow internet connection
+// or a low data plan or a slow cell phone.
+// And we always have to think about these users as well.
+// Not everyone has a super high end computer
+// or the latest phone.
+
+// That's a loaded again, because actually we want probably
+// to load the images a little bit
+// before we actually reached them.
+// So ideally we don't want our users to notice
+// that we are lazy loading these images
+
+// So all of this should basically happen
+// in the background without our user noticing that.
+// And so we should probably make these
+// images load a little bit earlier.
