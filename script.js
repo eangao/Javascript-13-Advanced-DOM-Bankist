@@ -422,65 +422,16 @@ nav.addEventListener('mouseover', function (e) {
 });
 
 nav.addEventListener('mouseout', function (e) {
-  //   So, you see that this time around,
-  // I'm not using the closest methods.
-  // And that's because there are simply no child elements
-  // that we could accidentally click here
-  // in this link, right?
   if (e.target.classList.contains('nav__link')) {
     const link = e.target;
-
-    //     And so now we would have to move up manually,
-    // not just once, but twice.
-    // And so instead of doing that,
-    // we will again use the closest method, okay?
-    // So again, instead of moving up manually,
-    // like one or two steps, we can simply search for a parent
-    // which matches a certain query.
-
-    //     Even though that's not the closest parent,
-    // I mean, there is another parent to these links,
-    // which is this one here.
-    // But it's no problem of also choosing
-    // an even higher up parent like we are doing here.
-    // So we are now at a parent of all of the links,
-
-    //     and so now from there,
-    // we can search for the nav_links again.
-    // And so these are then going to be the siblings
-    // of our initial links.
-    // And so, as we already learned before,
-    // we can use query selector on an element to search
-    // for a certain query only in that element.
     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
-
-    //     And now, let's actually also select the logo,
-    // and we could select it manuall also,
-    // by its class name, but let's just suppose
-    // that there are many navigations on this page.
-    // And so, again, to make the solution really robust,
-    // it's best to simply move up to the closest parent,
-    // in this case, the navigation.,
-    // and then from there, we simply search for an image.
     const logo = link.closest('.nav').querySelector('img');
 
-    // now we just need to change the opacity,
     siblings.forEach(el => {
-      //       and now we actually need to do
-      // that comparison that we did before.
-      // So checking if the current element is not the link itself.
-      // Because of course, this sibling here
-      // so these siblings, they will contain
-      // or initial link as well.
-      // So it needs to be different from link.
-
-      // But then for all the others that are not the original link,
-      // we want to change the opacity to 0.5.
-      // And indeed, we want to do the same with the logo.
-      if (el !== link) el.style.opacity = 0.5;
+      if (el !== link) el.style.opacity = 1;
     });
 
-    logo.style.opacity = 0.5;
+    logo.style.opacity = 1;
   }
 });
 
