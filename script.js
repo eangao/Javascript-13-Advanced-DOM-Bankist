@@ -257,6 +257,62 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
   // And we will actually do this later in this section.
 });
 
+////////////////////////////////////////////////////////
+// Tabbed component
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+// doing this here is a bad practice
+// because what if we had like 200 tabs?
+// Then we would have 200 copies
+// of this exact callback function here
+// and that would simply slow down the page.
+// So that's not at all desirable.
+// And so let's get rid of this
+// tabs.forEach(t => t.addEventListener('click', () => console.log('TAB')));
+
+// and one more time, use events delegation.
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+  // console.log(clicked);
+
+  // Guard clause
+  if (!clicked) return;
+  //   So this is a more modern way of writing this.
+  // So we could have written instead also,
+  // if there is a clicked on element, then do this.
+  // And this is the more traditional way
+  // if (clicked) {
+  //   clicked.classList.add('operations__tab--active');
+  // }
+
+  //   Of course, we still get to the null here
+  // but no error occurs
+  // because null JavaScript is no longer trying to execute
+  // this line of code here,
+
+  // remove active class
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  //   So basically clearing the class on all of them
+  // and then only add it afterwards on one of them.
+
+  //Activate tab
+  clicked.classList.add('operations__tab--active');
+
+  // remove active class
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  // Activate content area
+  // console.log(clicked.dataset.tab);
+  document
+    //   and then .data set.tab.
+    // So that's only the part after the data.
+    // Remember, so it's just tab.
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
+});
+
 /////////////////////////////////////////////////////////////////////////
 // How the DOM Really Works
 /////////////////////////////////////////////////////////////////////////
@@ -976,163 +1032,214 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 //////////////////////////////////////////////////////////////////////////
 // DOM Traversing
 //////////////////////////////////////////////////////////////////////////
-// This lecture
-// is gonna be about Traversing the Dom.
-// So Dom traversing is basically walking through the Dom.
-// Which means that we can select an element
-// based on another element.
-// And this is very important
-// because sometimes we need to select elements
-// relative to a certain other element.
+// // This lecture
+// // is gonna be about Traversing the Dom.
+// // So Dom traversing is basically walking through the Dom.
+// // Which means that we can select an element
+// // based on another element.
+// // And this is very important
+// // because sometimes we need to select elements
+// // relative to a certain other element.
 
-// For example, a direct child or a direct parent element.
-// Or sometimes we don't even know the structure
-// of the Dom at runtime.
-// And in all these cases, we need Dom traversing.
+// // For example, a direct child or a direct parent element.
+// // Or sometimes we don't even know the structure
+// // of the Dom at runtime.
+// // And in all these cases, we need Dom traversing.
 
-const h1 = document.querySelector('h1');
+// const h1 = document.querySelector('h1');
 
-// Going downward: child
+// // Going downward: child
 
-// So the first way of doing that is to use querySelector
-// because we already know that querySelector
-// also works on elements, not only on the document.
-console.log(h1.querySelectorAll('.highlight'));
+// // So the first way of doing that is to use querySelector
+// // because we already know that querySelector
+// // also works on elements, not only on the document.
+// console.log(h1.querySelectorAll('.highlight'));
 
-// All right, now, in this case these two elements here
-// are direct children of the h1
-// but as I said, it would go down as deep as necessary
-// into the Dom tree.
+// // All right, now, in this case these two elements here
+// // are direct children of the h1
+// // but as I said, it would go down as deep as necessary
+// // into the Dom tree.
 
-// Okay, and also if there were other highlight elements
-// on the page, so elements with this class,
-// they would not get selected,
-// because they would not be children of the h1 element.
+// // Okay, and also if there were other highlight elements
+// // on the page, so elements with this class,
+// // they would not get selected,
+// // because they would not be children of the h1 element.
 
-// Now, sometimes all we need are actually direct children.
-console.log(h1.childNodes);
-// And so here we actually get all kinds of stuff.
-// So we get texts we get the comment,
-// and we get then these elements.
-// And that's because we already know
-// that nodes can be anything so they can be texts
-// or elements or even comments as we have here.
+// // Now, sometimes all we need are actually direct children.
+// console.log(h1.childNodes);
+// // And so here we actually get all kinds of stuff.
+// // So we get texts we get the comment,
+// // and we get then these elements.
+// // And that's because we already know
+// // that nodes can be anything so they can be texts
+// // or elements or even comments as we have here.
 
-// But many times we are simply interested
-// in the elements themselves.
-console.log(h1.children);
-// And this then gives us an HTMLCollection
-// which remembers is a live collection, so it's updated,
-// and so here we indeed only get the three elements
-// that are actually inside of the h1.
-// but this one works only for direct children.
-// So keep that in mind.
+// // But many times we are simply interested
+// // in the elements themselves.
+// console.log(h1.children);
+// // And this then gives us an HTMLCollection
+// // which remembers is a live collection, so it's updated,
+// // and so here we indeed only get the three elements
+// // that are actually inside of the h1.
+// // but this one works only for direct children.
+// // So keep that in mind.
 
-// Finally, there's also
-// first and
-// last element child.
-// So these names are a little bit confusing,
-// but one more time,
-// that's because of the messy nature of JavaScript
-// with all of these things being implemented
-// at different points in time.
-// And so therefore it was difficult
-// to keep consisting naming conventions.
-h1.firstElementChild.style.color = 'white';
-h1.lastElementChild.style.color = 'orangered';
+// // Finally, there's also
+// // first and
+// // last element child.
+// // So these names are a little bit confusing,
+// // but one more time,
+// // that's because of the messy nature of JavaScript
+// // with all of these things being implemented
+// // at different points in time.
+// // And so therefore it was difficult
+// // to keep consisting naming conventions.
+// h1.firstElementChild.style.color = 'white';
+// h1.lastElementChild.style.color = 'orangered';
 
-////// Going upwards: parents
-// Okay, but now let's go upwards.
-// So going upwards.
-// So basically selecting parents
-// and for direct parents, it's actually very straightforward.
-console.log(h1.parentNode);
-// And so this is the direct parent,
+// ////// Going upwards: parents
+// // Okay, but now let's go upwards.
+// // So going upwards.
+// // So basically selecting parents
+// // and for direct parents, it's actually very straightforward.
+// console.log(h1.parentNode);
+// // And so this is the direct parent,
 
-// Then there's also the parentElement,
-// which is usually the one that we are interested in.
-// But in this case, it's simply the same.
-console.log(h1.parentElement);
-// But in this case, it's simply the same.
+// // Then there's also the parentElement,
+// // which is usually the one that we are interested in.
+// // But in this case, it's simply the same.
+// console.log(h1.parentElement);
+// // But in this case, it's simply the same.
 
-// However, most of the time we actually need a parent element
-// which is not a direct parent.
-// Or in other words, we might need to find a parent element
-// no matter how far away it is and the Dom tree.
-// And for that, we have the closest method.
-h1.closest('.header').style.background = 'var(--gradient-secondary)';
-// So let's say that on the page, we had multiple headers
-// so multiple elements with a class of header,
-// but for some reason
-// we only wanted to find the one
-// that is a parent element of h1.
-// So of all h1 element here.
-// And so for that, we can use closest.
-// And so the closest method receives a query string
-// just like querySelector and querySelectorAll.
+// // However, most of the time we actually need a parent element
+// // which is not a direct parent.
+// // Or in other words, we might need to find a parent element
+// // no matter how far away it is and the Dom tree.
+// // And for that, we have the closest method.
+// h1.closest('.header').style.background = 'var(--gradient-secondary)';
+// // So let's say that on the page, we had multiple headers
+// // so multiple elements with a class of header,
+// // but for some reason
+// // we only wanted to find the one
+// // that is a parent element of h1.
+// // So of all h1 element here.
+// // And so for that, we can use closest.
+// // And so the closest method receives a query string
+// // just like querySelector and querySelectorAll.
 
-// So this is a very important one
-// and we're gonna use it all the time
-// especially for event delegation.
+// // So this is a very important one
+// // and we're gonna use it all the time
+// // especially for event delegation.
 
-// Now, if this selector here actually matches the element
-// on which we're calling closest,
-// then that's actually the element that's gonna be returned.
-h1.closest('h1').style.background = 'var(--gradient-primary)';
-// So we can think of closest here
-// as basically being the opposite of querySelector.
-// So both receive a query string as an input
-// but querySelector, finds children,
-// no matter how deep in the Dom tree,
-// while the closest method finds parents.
-// And also no matter how far up in the Dom tree.
-// All right, so very important method here to keep in mind,
+// // Now, if this selector here actually matches the element
+// // on which we're calling closest,
+// // then that's actually the element that's gonna be returned.
+// h1.closest('h1').style.background = 'var(--gradient-primary)';
+// // So we can think of closest here
+// // as basically being the opposite of querySelector.
+// // So both receive a query string as an input
+// // but querySelector, finds children,
+// // no matter how deep in the Dom tree,
+// // while the closest method finds parents.
+// // And also no matter how far up in the Dom tree.
+// // All right, so very important method here to keep in mind,
 
-//Going sideways: siblings
+// //Going sideways: siblings
 
-// and for some reason in JavaScript,
-// we can only access direct siblings.
-// So basically only the previous and the next one.
-console.log(h1.previousElementSibling);
-// So this is the first child of this parent element,
-// and therefore it doesn't have a previous sibling
+// // and for some reason in JavaScript,
+// // we can only access direct siblings.
+// // So basically only the previous and the next one.
+// console.log(h1.previousElementSibling);
+// // So this is the first child of this parent element,
+// // and therefore it doesn't have a previous sibling
 
-// but it has a next sibling.
-console.log(h1.nextElementSibling);
+// // but it has a next sibling.
+// console.log(h1.nextElementSibling);
 
-console.log(h1.previousSibling);
-console.log(h1.nextSibling);
-// And just like before, we also have the same methods
-// or actually the same properties for nodes.
-// So that's just previous sibling
-// and next sibling.
-// So let's see, and here the previous sibling
-// is now actually text,
-// so not sure what that is.
-// Well, that's not really important because again,
-// most of the time we're gonna be working
-// with the elements anyway.
+// console.log(h1.previousSibling);
+// console.log(h1.nextSibling);
+// // And just like before, we also have the same methods
+// // or actually the same properties for nodes.
+// // So that's just previous sibling
+// // and next sibling.
+// // So let's see, and here the previous sibling
+// // is now actually text,
+// // so not sure what that is.
+// // Well, that's not really important because again,
+// // most of the time we're gonna be working
+// // with the elements anyway.
 
-// Now, if we really need all the siblings
-// and not just the previous and the next one,
-// then we can use the trick of moving up to the parent element
-// and then read all the children from there.
-console.log(h1.parentElement.children);
-// So this is an HTMLCollection,
-// remember, so it's one more time not an array,
-// but it is still an iterable
-// that we can spread into an array.
-[...h1.parentElement.children].forEach(function (el) {
-  // And so comparisons between elements actually work just fine.
-  if (el !== h1) el.style.transform = 'scale(0.5)';
-});
-// are now like 50% smaller.
-// All right?
-// And so this is how we can work
-// with all the sibling elements of one element.
+// // Now, if we really need all the siblings
+// // and not just the previous and the next one,
+// // then we can use the trick of moving up to the parent element
+// // and then read all the children from there.
+// console.log(h1.parentElement.children);
+// // So this is an HTMLCollection,
+// // remember, so it's one more time not an array,
+// // but it is still an iterable
+// // that we can spread into an array.
+// [...h1.parentElement.children].forEach(function (el) {
+//   // And so comparisons between elements actually work just fine.
+//   if (el !== h1) el.style.transform = 'scale(0.5)';
+// });
+// // are now like 50% smaller.
+// // All right?
+// // And so this is how we can work
+// // with all the sibling elements of one element.
 
-// Great, and that's actually the fundamentals
-// of Dom traversing.
-// And we're gonna need them all the time, and especially,
-// when we're doing some more complex event delegation
-// likely will do throughout the rest of the section.
+// // Great, and that's actually the fundamentals
+// // of Dom traversing.
+// // And we're gonna need them all the time, and especially,
+// // when we're doing some more complex event delegation
+// // likely will do throughout the rest of the section.
+
+//////////////////////////////////////////////////////////////////
+// Building a Tabbed Component
+//////////////////////////////////////////////////////////////////
+
+// In this video we're gonna implement
+// a very popular component which is a tabbed component.
+// And you will see tabbed components
+// on many websites these days.
+// So it's great to learn how to build one yourself.
+
+// Now a tabbed component can appear in many different ways,
+// but what they all have in common
+// is that they have some kind of tabs like this here.
+// And when you clicked it up
+// then the content of this area below will change.
+// And so that's exactly what happens here with these buttons.
+// So basically these three are our tabs.
+// And then as we click on one of the tabs,
+// it will reveal the associated content.
+// So a little bit like tabs here in our browser, right?
+// So each browser tab has its own webpage.
+// And so here each tab has its own content area, basically.
+
+// So let's just quickly recap.
+// And as I just mentioned a minute ago
+// the whole idea when we build components like this
+// is to just add and remove classes
+// as necessary to manipulate the content to our needs.
+
+// That's actually the exact same thing
+// we did with a modal window.
+// So if you take a look at the code, it's a bit similar.
+// So to hide and display the modal window
+// all we do is to add and remove this hidden class.
+
+// Now, in this case, it's a little bit more complex
+// but the idea is always the same.
+// It's to work with classes
+// that have some styles for showing and hiding the classes.
+// And so if you're not yet really familiar with CSS,
+// it's also important that you really check out to CSS
+// to build these components for yourself
+// and the same goes for the HTML.
+
+// But of course, I could not write this code here as well
+// because then this tutorial would take
+// like one hour instead of 15 minutes.
+// But anyway, I hope that this was fun
+// and that make sure to understand what we did here
+// including the HTML and CSS.
