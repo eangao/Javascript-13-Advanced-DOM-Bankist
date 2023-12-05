@@ -554,6 +554,33 @@ const headerObserver = new IntersectionObserver(stickyNav, {
 
 headerObserver.observe(header);
 
+// Reveal sections
+const allSections = document.querySelectorAll('.section');
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove('section--hidden');
+
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+
+  //   so this will make it so that the section is only revealed
+  // when it is 15% visible
+  threshold: 0.15,
+});
+
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
+
 /////////////////////////////////////////////////////////////////////////
 // How the DOM Really Works
 /////////////////////////////////////////////////////////////////////////
@@ -1668,3 +1695,16 @@ headerObserver.observe(header);
 // // that's when we want then to display the navigation, okay?
 // // And so this time, we are going
 // // to observe the header element.
+
+////////////////////////////////////////////////////////
+// Revealing Elements on Scroll
+////////////////////////////////////////////////////////
+// Let's implement another really cool
+// and modern feature using the intersection observer API.
+// And this time,
+
+// we're gonna reveal elements as we scroll close to them.
+// And this effect can give your pages a very nice touch.
+// And you can, in fact,
+// easily implement it without any external library.
+// So the effect that I mean is this one
