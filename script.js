@@ -325,40 +325,7 @@ tabsContainer.addEventListener('click', function (e) {
 
 ///////////////////////////////
 // Menu fade animation
-
-// But now, of course, we do not want to attach
-// an event listener to each of these links.
-// So we already know that we should do
-// event delegation here instead.
-
-// So let's find the common parent element
-// of all of the links,
-// and also, including the logo there.
-// So if we were only working with the links,
-// it would be this element,
-// but we also want to work with the logo here.
-// And so let's actually use this entire navigation here
-// as our parent container on which we will handle the event
-// that is gonna bubble up from the links.
-// So keep in mind that all of this works
-// because events bubble up from their target.
-
-//nav transfer to the upper of the page
-
-// the mouse enter event,
-// and mouseover is actually similar to mouseenter,
-// with the big difference that mouseenter
-// does not bubble, okay?
-// But here, we need the event to actually bubble
-// so that it can even reach the navigation element.
-
-// and there are also kind of opposite events
-// of mouseover and mouseenter.
-// And we use these to basically undo
-// what we do on the hover.
-// So the opposite of mouseenter is mouseleave,
-// and the opposite of this mouseover is mouseout.
-nav.addEventListener('mouseover', function (e) {
+const handleHover = function (e, opacity) {
   //   So, you see that this time around,
   // I'm not using the closest methods.
   // And that's because there are simply no child elements
@@ -414,26 +381,89 @@ nav.addEventListener('mouseover', function (e) {
       // But then for all the others that are not the original link,
       // we want to change the opacity to 0.5.
       // And indeed, we want to do the same with the logo.
-      if (el !== link) el.style.opacity = 0.5;
+      if (el !== link) el.style.opacity = opacity;
     });
 
-    logo.style.opacity = 0.5;
+    logo.style.opacity = opacity;
   }
+};
+
+// But now, of course, we do not want to attach
+// an event listener to each of these links.
+// So we already know that we should do
+// event delegation here instead.
+
+// So let's find the common parent element
+// of all of the links,
+// and also, including the logo there.
+// So if we were only working with the links,
+// it would be this element,
+// but we also want to work with the logo here.
+// And so let's actually use this entire navigation here
+// as our parent container on which we will handle the event
+// that is gonna bubble up from the links.
+// So keep in mind that all of this works
+// because events bubble up from their target.
+
+//nav transfer to the upper of the page
+
+// the mouse enter event,
+// and mouseover is actually similar to mouseenter,
+// with the big difference that mouseenter
+// does not bubble, okay?
+// But here, we need the event to actually bubble
+// so that it can even reach the navigation element.
+
+// and there are also kind of opposite events
+// of mouseover and mouseenter.
+// And we use these to basically undo
+// what we do on the hover.
+// So the opposite of mouseenter is mouseleave,
+// and the opposite of this mouseover is mouseout.
+nav.addEventListener('mouseover', function (e) {
+  handleHover(e, 0.5);
 });
 
 nav.addEventListener('mouseout', function (e) {
-  if (e.target.classList.contains('nav__link')) {
-    const link = e.target;
-    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
-    const logo = link.closest('.nav').querySelector('img');
-
-    siblings.forEach(el => {
-      if (el !== link) el.style.opacity = 1;
-    });
-
-    logo.style.opacity = 1;
-  }
+  handleHover(e, 1);
 });
+
+// all we do here is to pass in that function
+// and then it's going to work just like this, right?
+// So we have done this many times
+// throughout this course, right?
+// But now, the problem is that we actually want
+// to pass in values into this function, right?
+// So we need to tell this function to use
+// the opacity of 0.5 in this case,
+// and have one in this case.
+// Now, right?
+// Also, we need a way of passing this event.
+// So right now, none of this would work.
+// So let me show that to you.
+// So I'm not clicking, of course,
+// but you see, it would not really work, okay?
+// So, maybe you would think that we could do this.
+// So like, maybe passing an event here,
+// and then 0.5, which is the opacity that we want.
+// But this, of course, is not going to work.
+// So the first problem is that e is of course, not defined.
+// But the main problem really here
+// is that addEventListener here expects a function.
+// So we need to pass a function.
+// But if we call the function,
+// then all of this here will become some other value.
+// In this case, that's undefined,
+// because we don't return anything
+// from this function, all right?
+// And so this is simply not gonna work.
+// So we talked about this many times,
+// but it's always good to remember
+// that JavaScript indeed expects here a function,
+// and not just some other regular value
+// which would be the result of calling the function like this.
+////======
+// nav.addEventListener('mouseover', handleHover(e, 1));
 
 /////////////////////////////////////////////////////////////////////////
 // How the DOM Really Works
