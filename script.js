@@ -325,7 +325,24 @@ tabsContainer.addEventListener('click', function (e) {
 
 ///////////////////////////////
 // Menu fade animation
-const handleHover = function (e, opacity) {
+
+// const handleHover = function (e, opacity) {
+
+const handleHover = function (e) {
+  //   because bind, remember, returns a new function.
+  // Now in this function,
+  // this variable will now be set to this value.
+
+  //   Now, remember that usually,
+  // this keyword is equal to current target.
+
+  //   So by default, this keyword is the same
+  // as the current target,
+  // so the element on which the event listener is attached to,
+  // but when we then set this keyword manually,
+  // of course, it becomes whatever we set it to.
+  // console.log(this, e.currentTarget);
+
   //   So, you see that this time around,
   // I'm not using the closest methods.
   // And that's because there are simply no child elements
@@ -381,10 +398,13 @@ const handleHover = function (e, opacity) {
       // But then for all the others that are not the original link,
       // we want to change the opacity to 0.5.
       // And indeed, we want to do the same with the logo.
-      if (el !== link) el.style.opacity = opacity;
+      // if (el !== link) el.style.opacity = opacity;
+
+      if (el !== link) el.style.opacity = this;
     });
 
-    logo.style.opacity = opacity;
+    // logo.style.opacity = opacity;
+    logo.style.opacity = this;
   }
 };
 
@@ -420,13 +440,13 @@ const handleHover = function (e, opacity) {
 // what we do on the hover.
 // So the opposite of mouseenter is mouseleave,
 // and the opposite of this mouseover is mouseout.
-nav.addEventListener('mouseover', function (e) {
-  handleHover(e, 0.5);
-});
+// nav.addEventListener('mouseover', function (e) {
+//   handleHover(e, 0.5);
+// });
 
-nav.addEventListener('mouseout', function (e) {
-  handleHover(e, 1);
-});
+// nav.addEventListener('mouseout', function (e) {
+//   handleHover(e, 1);
+// });
 
 // all we do here is to pass in that function
 // and then it's going to work just like this, right?
@@ -464,6 +484,47 @@ nav.addEventListener('mouseout', function (e) {
 // which would be the result of calling the function like this.
 ////======
 // nav.addEventListener('mouseover', handleHover(e, 1));
+
+// And so as I just said, we can do even better,
+// and that is by using the bind method
+// that we already studied before.
+// So, remember that the bind method
+// creates a copy of the function that it's called on,
+// and it will set the disc keyword in this function call
+// to whatever value that we pass into bind,
+
+// So handleHover.bind and then one.
+// And so this is gonna work
+// because this is gonna be also a function,
+// because bind, remember, returns a new function.
+
+// Passing "argument" into handler
+
+// Passing an argument into a handler.
+// And I'm using quotes here, because of course,
+// this is not really an argument.
+// So in fact, we don't even need this here.
+// And in fact, it is impossible to pass another argument
+// into an eventHandler function.
+// So any handler function like this one
+// can only ever have one real argument.
+// And so, in this case, can only ever have one real parameter,
+// and that is the event.
+// But if we want to pass additional values
+// into the handler function,
+// then we need to use the disk keywords,
+// like we just did here.
+// And if we wanted multiple values,
+// then we could of course, pass in here
+// like an array or an object instead of just one value.
+// So this is kind of a workaround into the fact
+// that the handler function can only take one argument.
+// So, it's really nice effect and as I said in the beginning,
+// it also taught us how we can pass arguments,
+// essentially, into handler functions.
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+
+nav.addEventListener('mouseout', handleHover.bind(1));
 
 /////////////////////////////////////////////////////////////////////////
 // How the DOM Really Works
