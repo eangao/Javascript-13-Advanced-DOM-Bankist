@@ -1469,3 +1469,72 @@ nav.addEventListener('mouseout', handleHover.bind(1));
 // And this will teach us something really valuable,
 // which is how to pass arguments
 // into event handler functions.
+
+//////////////////////////////////////////////////////
+// Implementing a Sticky Navigation: The Scroll Event
+//////////////////////////////////////////////////////
+
+// Let's implement another pretty common feature
+// on webpages, which is that the navigation bar
+// becomes attached to the top of the page
+// after we scroll to a certain point.
+// And this is called a sticky navigation.
+
+const initialCoords = section1.getBoundingClientRect();
+console.log(initialCoords);
+
+// So, the scroll event is available on Window.
+// All right.
+// So, not document, but really window.addeventlistener
+// and then scroll.
+// Okay.
+// So, this event will be fired off
+// each time that we scroll on our page.
+
+// So, to scroll event is not really efficient
+// and usually it should be avoided.
+// But again for now, let's use that.
+window.addEventListener('scroll', function (e) {
+  // console.log(e);
+
+  console.log(window.scrollY);
+
+  //   But now the question is, when exactly should
+  // the navigation actually become sticky?
+  // Well, it should happen here as soon as we reach
+  // the first section.
+
+  //   the size of this element that comes before
+  // is actually dependent on the view port size.
+  // So, if I do this, then you see that
+  // the first section starts way earlier, so like at 300.
+  // And so we cannot hard coat to value
+  // and therefore we need to calculate it dynamically.
+
+  if (window.scrollY > initialCoords.top) {
+    nav.classList.add('sticky');
+    console.log('add sticky');
+  } else {
+    nav.classList.remove('sticky');
+    console.log('remove sticky');
+  }
+});
+
+// So, this works just fine now, but as I mentioned before,
+// this is pretty bad for performance.
+// So, using the scroll event for performing a certain action
+// at a certain position of the page
+// is really not the way to go.
+// And again, that's because the scroll event here
+// fires all the time, no matter how small
+// the change is here in the scroll.
+// And so that makes for a pretty bad performance
+// and especially on mobile.
+// Like on the modern computer, of course,
+// you're not gonna notice anything,
+// but if you're using this page maybe on an older smartphone,
+// then it's not gonna be so nice.
+// All right.
+// And so in the next video, we're gonna look at a better
+// and way more efficient tool,
+// which is the intersection of server API.
