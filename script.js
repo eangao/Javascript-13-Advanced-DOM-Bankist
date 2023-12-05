@@ -972,3 +972,167 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 
 // Let's now use the power of event bubbling
 // to implement something called event delegation.
+
+//////////////////////////////////////////////////////////////////////////
+// DOM Traversing
+//////////////////////////////////////////////////////////////////////////
+// This lecture
+// is gonna be about Traversing the Dom.
+// So Dom traversing is basically walking through the Dom.
+// Which means that we can select an element
+// based on another element.
+// And this is very important
+// because sometimes we need to select elements
+// relative to a certain other element.
+
+// For example, a direct child or a direct parent element.
+// Or sometimes we don't even know the structure
+// of the Dom at runtime.
+// And in all these cases, we need Dom traversing.
+
+const h1 = document.querySelector('h1');
+
+// Going downward: child
+
+// So the first way of doing that is to use querySelector
+// because we already know that querySelector
+// also works on elements, not only on the document.
+console.log(h1.querySelectorAll('.highlight'));
+
+// All right, now, in this case these two elements here
+// are direct children of the h1
+// but as I said, it would go down as deep as necessary
+// into the Dom tree.
+
+// Okay, and also if there were other highlight elements
+// on the page, so elements with this class,
+// they would not get selected,
+// because they would not be children of the h1 element.
+
+// Now, sometimes all we need are actually direct children.
+console.log(h1.childNodes);
+// And so here we actually get all kinds of stuff.
+// So we get texts we get the comment,
+// and we get then these elements.
+// And that's because we already know
+// that nodes can be anything so they can be texts
+// or elements or even comments as we have here.
+
+// But many times we are simply interested
+// in the elements themselves.
+console.log(h1.children);
+// And this then gives us an HTMLCollection
+// which remembers is a live collection, so it's updated,
+// and so here we indeed only get the three elements
+// that are actually inside of the h1.
+// but this one works only for direct children.
+// So keep that in mind.
+
+// Finally, there's also
+// first and
+// last element child.
+// So these names are a little bit confusing,
+// but one more time,
+// that's because of the messy nature of JavaScript
+// with all of these things being implemented
+// at different points in time.
+// And so therefore it was difficult
+// to keep consisting naming conventions.
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'orangered';
+
+////// Going upwards: parents
+// Okay, but now let's go upwards.
+// So going upwards.
+// So basically selecting parents
+// and for direct parents, it's actually very straightforward.
+console.log(h1.parentNode);
+// And so this is the direct parent,
+
+// Then there's also the parentElement,
+// which is usually the one that we are interested in.
+// But in this case, it's simply the same.
+console.log(h1.parentElement);
+// But in this case, it's simply the same.
+
+// However, most of the time we actually need a parent element
+// which is not a direct parent.
+// Or in other words, we might need to find a parent element
+// no matter how far away it is and the Dom tree.
+// And for that, we have the closest method.
+h1.closest('.header').style.background = 'var(--gradient-secondary)';
+// So let's say that on the page, we had multiple headers
+// so multiple elements with a class of header,
+// but for some reason
+// we only wanted to find the one
+// that is a parent element of h1.
+// So of all h1 element here.
+// And so for that, we can use closest.
+// And so the closest method receives a query string
+// just like querySelector and querySelectorAll.
+
+// So this is a very important one
+// and we're gonna use it all the time
+// especially for event delegation.
+
+// Now, if this selector here actually matches the element
+// on which we're calling closest,
+// then that's actually the element that's gonna be returned.
+h1.closest('h1').style.background = 'var(--gradient-primary)';
+// So we can think of closest here
+// as basically being the opposite of querySelector.
+// So both receive a query string as an input
+// but querySelector, finds children,
+// no matter how deep in the Dom tree,
+// while the closest method finds parents.
+// And also no matter how far up in the Dom tree.
+// All right, so very important method here to keep in mind,
+
+//Going sideways: siblings
+
+// and for some reason in JavaScript,
+// we can only access direct siblings.
+// So basically only the previous and the next one.
+console.log(h1.previousElementSibling);
+// So this is the first child of this parent element,
+// and therefore it doesn't have a previous sibling
+
+// but it has a next sibling.
+console.log(h1.nextElementSibling);
+
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+// And just like before, we also have the same methods
+// or actually the same properties for nodes.
+// So that's just previous sibling
+// and next sibling.
+// So let's see, and here the previous sibling
+// is now actually text,
+// so not sure what that is.
+// Well, that's not really important because again,
+// most of the time we're gonna be working
+// with the elements anyway.
+
+// Now, if we really need all the siblings
+// and not just the previous and the next one,
+// then we can use the trick of moving up to the parent element
+// and then read all the children from there.
+console.log(h1.parentElement.children);
+// So this is an HTMLCollection,
+// remember, so it's one more time not an array,
+// but it is still an iterable
+// that we can spread into an array.
+[...h1.parentElement.children].forEach(function (el) {
+  // And so comparisons between elements actually work just fine.
+  if (el !== h1) el.style.transform = 'scale(0.5)';
+});
+// are now like 50% smaller.
+// All right?
+// And so this is how we can work
+// with all the sibling elements of one element.
+
+// Great, and that's actually the fundamentals
+// of Dom traversing.
+// And we're gonna need them all the time, and especially,
+// when we're doing some more complex event delegation
+// likely will do throughout the rest of the section.
