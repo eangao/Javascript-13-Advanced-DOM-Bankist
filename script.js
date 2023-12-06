@@ -624,6 +624,7 @@ imgTargets.forEach(img => imgObserver.observe(img));
 const slides = document.querySelectorAll('.slide');
 const btnLeft = document.querySelector('.slider__btn--left');
 const btnRight = document.querySelector('.slider__btn--right');
+const dotContainer = document.querySelector('.dots');
 
 let curSlide = 0;
 const maxSlide = slides.length;
@@ -637,9 +638,50 @@ const maxSlide = slides.length;
 // slides.forEach((s, i) => (s.style.transform = `translateX(${100 * i}%)`));
 // // 0%, 100%, 200%, 300%
 
+const createDots = function () {
+  slides.forEach(function (_, i) {
+    dotContainer.insertAdjacentHTML(
+      'beforeend',
+
+      // And so as always, all the custom data attributes
+      // are in the dataset, and then dot this value.
+      // So .slide.
+      //data-slide  ->  dataset.slide
+      `<button class="dots__dot" data-slide="${i}"></button>`
+    );
+  });
+};
+
+createDots();
+
+const activateDot = function (slide) {
+  //   So we will select all of the dots,
+  // each time that we want to activate one.
+  // And we will then remove that active class,
+  // and then add it only on the one that we're interested in.
+  document
+    .querySelectorAll('.dots__dot')
+    .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+  // So how do we select the one that we actually want?
+  // Well, we can do that also based on the data attribute.
+
+  //   So let's say we pass in slide number two,
+  // so we want to activate the dot corresponding
+  // to slide number two.
+  // And so here in this querySelector,
+  // we can basically select the element with this class,
+  // and with this data slide attribute set to two.
+  document
+    .querySelector(`.dots__dot[data-slide="${slide}"]`)
+    .classList.add('dots__dot--active');
+};
+
+activateDot(0);
+
 const goToSlide = function (slide) {
   slides.forEach(
-    (s, i) => (s.style.transform = `translateX(${100 * (i - curSlide)}%)`)
+    (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
   );
 };
 
@@ -654,6 +696,7 @@ const nextSlide = function () {
   }
 
   goToSlide(curSlide);
+  activateDot(curSlide);
 };
 
 // previous slide
@@ -665,6 +708,7 @@ const prevSlide = function () {
   }
 
   goToSlide(curSlide);
+  activateDot(curSlide);
 };
 
 btnRight.addEventListener('click', nextSlide);
@@ -683,6 +727,36 @@ btnLeft.addEventListener('click', prevSlide);
 // );
 // });
 //  curSlide = 1: -100%, 0%, 100%, 200%
+
+document.addEventListener('keydown', function (e) {
+  // console.log(e);
+
+  if (e.key === 'ArrowLeft') prevSlide();
+
+  //   we also could have used like, short circuiting
+  // So this would work the same way
+  // because of short circuiting, right?
+  // and let you decide which one you want to use.
+  e.key === 'ArrowRight' && nextSlide();
+});
+
+//we will use event delegation
+dotContainer.addEventListener('click', function (e) {
+  if (e.target.classList.contains('dots__dot')) {
+    // console.log('DOT');
+    // And so as always, all the custom data attributes
+    // are in the dataset, and then dot this value.
+    // So .slide.
+    //data-slide  ->  dataset.slide
+    // const slide = e.target.dataset.slide;
+    // to make even better we now use distructuring
+    const { slide } = e.target.dataset;
+    goToSlide(slide);
+    activateDot(slide);
+
+    // console.log(slide);
+  }
+});
 
 /////////////////////////////////////////////////////////////////////////
 // How the DOM Really Works
