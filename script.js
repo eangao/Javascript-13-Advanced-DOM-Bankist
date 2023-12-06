@@ -628,25 +628,60 @@ const btnRight = document.querySelector('.slider__btn--right');
 let curSlide = 0;
 const maxSlide = slides.length;
 
-const slider = document.querySelector('.slider');
-slider.style.transform = 'scale(0.3) translateX(-1200px)';
-slider.style.overflow = 'visible';
+//for testing only while coding to view all image
+// const slider = document.querySelector('.slider');
+// slider.style.transform = 'scale(0.3) translateX(-1200px)';
+// slider.style.overflow = 'visible';
 
-slides.forEach((s, i) => (s.style.transform = `translateX(${100 * i}%)`));
-// 0%, 100%, 200%, 300%
+// refractor
+// slides.forEach((s, i) => (s.style.transform = `translateX(${100 * i}%)`));
+// // 0%, 100%, 200%, 300%
+
+const goToSlide = function (slide) {
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${100 * (i - curSlide)}%)`)
+  );
+};
+
+goToSlide(0);
 
 //Next slide
-btnRight.addEventListener('click', function () {
+const nextSlide = function () {
   if (curSlide === maxSlide - 1) {
     curSlide = 0;
   } else {
     curSlide++;
   }
 
-  slides.forEach(
-    (s, i) => (s.style.transform = `translateX(${100 * (i - curSlide)}%)`)
-  );
-});
+  goToSlide(curSlide);
+};
+
+// previous slide
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide - 1;
+  } else {
+    curSlide--;
+  }
+
+  goToSlide(curSlide);
+};
+
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevSlide);
+
+//refractor
+// btnRight.addEventListener('click', function () {
+// if (curSlide === maxSlide - 1) {
+//   curSlide = 0;
+// } else {
+//   curSlide++;
+// }
+
+// slides.forEach(
+//   (s, i) => (s.style.transform = `translateX(${100 * (i - curSlide)}%)`)
+// );
+// });
 //  curSlide = 1: -100%, 0%, 100%, 200%
 
 /////////////////////////////////////////////////////////////////////////
