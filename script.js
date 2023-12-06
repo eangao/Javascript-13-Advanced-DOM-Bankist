@@ -1954,112 +1954,292 @@ slider();
 // Lifecycle DOM Events
 ////////////////////////////////////////////////////
 
-// Now to close off this section,
-// let's take a quick look at a couple of different events
-// that occur in the DOM during a webpage's life cycle.
-// And when we say lifecycle,
-// we mean right from the moment
-// that the page is first accessed, until the user leaves it.
+// // Now to close off this section,
+// // let's take a quick look at a couple of different events
+// // that occur in the DOM during a webpage's life cycle.
+// // And when we say lifecycle,
+// // we mean right from the moment
+// // that the page is first accessed, until the user leaves it.
 
-//first
-// Now, the first event that we need to talk about
-// is called DOM content loaded.
-// And this event is fired by the document
-// as soon as the HTML is completely parsed,
-// which means that the HTML has been downloaded
-// and been converted to the DOM tree.
-// Also, all scripts must be downloaded and executed
-// before the DOM content loaded event can happen.
+// //first
+// // Now, the first event that we need to talk about
+// // is called DOM content loaded.
+// // And this event is fired by the document
+// // as soon as the HTML is completely parsed,
+// // which means that the HTML has been downloaded
+// // and been converted to the DOM tree.
+// // Also, all scripts must be downloaded and executed
+// // before the DOM content loaded event can happen.
 
-// now this event does actually not wait for images and other
-// external resources to load.
-// Okay. So just HTML and JavaScript need to be loaded.
-document.addEventListener('DOMContentLoaded', function (e) {
-  console.log('HTML parse and DOM tree built', e);
-});
-
-// So this year we can now execute code that should only be
-// executed after the DOM is available.
-// And in fact,
-// we want all our code only to be executed after the DOM is
-// ready.
-
-// So this year we can now execute code that should only be
-// executed after the DOM is available.
-// And in fact,
-// we want all our code only to be executed after the DOM is
-// ready.
-// Right?
-// So does that mean that we should wrap our entire code into
-// an event listener like this?
-// So with a function like this, well, actually, no,
-// we don't need to do that.
-// And that's because we have to script tag,
-// which is the one that imports or a JavaScript into the HTML,
-// right. At the end of the body.
-// So you see it is down here.
-// So basically it's the last thing that is going to be read in
-// the HTML.
-// And so basically the browser will only find or script when
-// the rest of the HTML is already parsed anyway.
-// So when we have to script tag here at the end of the HTML,
-// then we do not need to listen for the DOM content loaded
-
-//2nd
-// next up there is also the load event and the load event is
-// fired by the window. As soon as not only the HTML is parsed,
-// but also all the images and external resources like CSS
-// files are also loaded.
-// So basically when the complete page has finished loading is
-// when this event gets fired.
-window.addEventListener('load', function (event) {
-  console.log('Page fully loaded', event);
-  // when everything was finished, we also got this load event.
-});
-
-//3rd
-// // the last event that I want to show you is the before unload
-// // event, which also gets fired on window.
-// window.addEventListener('beforeunload', function (e) {
-//   //   And this event here is created immediately before a user is
-//   // about to leave a page. So for example,
-//   // after clicking this close button here in the browser tab,
-//   // so we can basically use this event to ask users if they are
-//   // 100% sure that they want to leave the page.
-//   // Now in some browsers to make this work,
-//   // we need to call prevent default here. In Chrome
-//   // it's not necessary, but some browsers require it.
-
-//   e.preventDefault();
-
-//   console.log(e);
-
-//   //   And actually in order to display a leaving confirmation,
-//   // we need to set the return value on the event to an empty
-//   // string.
-//   // So return value and an empty string.
-//   // And this probably looks a bit weird,
-//   // but this is for historical reasons.
-//   e.returnValue = '';
-
-//   //   Now a long time ago,
-//   // developers were actually able to customize the message
-//   // that was displayed here, but then of course,
-//   // many people started to abuse this.
-//   // And so now we can only see it as a generic message.
-//   // So no matter what we write here,
-//   // we will always get this same pop-up.
+// // now this event does actually not wait for images and other
+// // external resources to load.
+// // Okay. So just HTML and JavaScript need to be loaded.
+// document.addEventListener('DOMContentLoaded', function (e) {
+//   console.log('HTML parse and DOM tree built', e);
 // });
 
-// So really please don't abuse
-// this kind of feature because a message like this is of
-// course pretty intrusive and it should only be displayed when
-// necessary.
-// So don't be one of these developers who abuses too much
-// power.
-// So the only time you should prompt the user,
-// if they really want to leave the page is for example,
-// when the user is leaving in the middle of filling out the
-// form, or like writing a blog post or something like that.
-// So a situation in which data could actually be lost by
-// accident.
+// // So this year we can now execute code that should only be
+// // executed after the DOM is available.
+// // And in fact,
+// // we want all our code only to be executed after the DOM is
+// // ready.
+
+// // So this year we can now execute code that should only be
+// // executed after the DOM is available.
+// // And in fact,
+// // we want all our code only to be executed after the DOM is
+// // ready.
+// // Right?
+// // So does that mean that we should wrap our entire code into
+// // an event listener like this?
+// // So with a function like this, well, actually, no,
+// // we don't need to do that.
+// // And that's because we have to script tag,
+// // which is the one that imports or a JavaScript into the HTML,
+// // right. At the end of the body.
+// // So you see it is down here.
+// // So basically it's the last thing that is going to be read in
+// // the HTML.
+// // And so basically the browser will only find or script when
+// // the rest of the HTML is already parsed anyway.
+// // So when we have to script tag here at the end of the HTML,
+// // then we do not need to listen for the DOM content loaded
+
+// //2nd
+// // next up there is also the load event and the load event is
+// // fired by the window. As soon as not only the HTML is parsed,
+// // but also all the images and external resources like CSS
+// // files are also loaded.
+// // So basically when the complete page has finished loading is
+// // when this event gets fired.
+// window.addEventListener('load', function (event) {
+//   console.log('Page fully loaded', event);
+//   // when everything was finished, we also got this load event.
+// });
+
+// //3rd
+// // // the last event that I want to show you is the before unload
+// // // event, which also gets fired on window.
+// // window.addEventListener('beforeunload', function (e) {
+// //   //   And this event here is created immediately before a user is
+// //   // about to leave a page. So for example,
+// //   // after clicking this close button here in the browser tab,
+// //   // so we can basically use this event to ask users if they are
+// //   // 100% sure that they want to leave the page.
+// //   // Now in some browsers to make this work,
+// //   // we need to call prevent default here. In Chrome
+// //   // it's not necessary, but some browsers require it.
+
+// //   e.preventDefault();
+
+// //   console.log(e);
+
+// //   //   And actually in order to display a leaving confirmation,
+// //   // we need to set the return value on the event to an empty
+// //   // string.
+// //   // So return value and an empty string.
+// //   // And this probably looks a bit weird,
+// //   // but this is for historical reasons.
+// //   e.returnValue = '';
+
+// //   //   Now a long time ago,
+// //   // developers were actually able to customize the message
+// //   // that was displayed here, but then of course,
+// //   // many people started to abuse this.
+// //   // And so now we can only see it as a generic message.
+// //   // So no matter what we write here,
+// //   // we will always get this same pop-up.
+// // });
+
+// // So really please don't abuse
+// // this kind of feature because a message like this is of
+// // course pretty intrusive and it should only be displayed when
+// // necessary.
+// // So don't be one of these developers who abuses too much
+// // power.
+// // So the only time you should prompt the user,
+// // if they really want to leave the page is for example,
+// // when the user is leaving in the middle of filling out the
+// // form, or like writing a blog post or something like that.
+// // So a situation in which data could actually be lost by
+// // accident.
+
+/////////////////////////////////////////////////////////
+// Efficient Script Loading: defer and async
+/////////////////////////////////////////////////////////
+
+//see pdf lecture
+
+// To finish this section,
+// let's take a quick look at different ways
+// of loading a JavaScript script in HTML.
+// So up to this point, we have always used the regular way
+// of including JavaScript files into our HTML,
+// like we can see here.
+// However, we can also add the async attribute
+// to the script tag like this, or the defer attribute.
+// And these attributes are gonna influence the way
+// in which the JavaScript file is fetched,
+// which basically means download and then executed.
+
+//regular
+
+// So never do this,
+// never include the script in the head like this.
+// That's why we usually always put the script tag at the end
+// of the body, so that all the HTML is already parsed,
+// when it finally reaches the script tag.
+// So in this situation,
+// this is how the page loading process looks like.
+
+// when it finally reaches the script tag.
+// So in this situation,
+// this is how the page loading process looks like.
+// The HTML is parsed,
+// then the script tag is found at the end of the document,
+// then the script is fetched.
+// And then finally, the script gets executed.
+// And this is much better.
+
+// So if you didn't know why we always put the script
+// at the end of the body.
+// Well, now you know, however, this is still not perfect,
+// because the script could have been downloaded before,
+// while the HTML was still being parsed.
+
+//async
+
+// So what about the async attribute?
+// Well, this is what the loading process looks like
+// when we use async script loading in the head
+// of the document.
+// So as you can see, the difference is that the script
+// is loaded at the same time as the HTML is parsed.
+// So in an asynchronous way,
+// so that's already an advantage.
+
+// However, the HTML parsing still stops
+// for the script execution.
+// So the script is actually downloaded asynchronously.
+// But then it's executed right away in a synchronous way.
+// And so the HTML code has to wait for being parsed.
+// But anyway, as we can see from the length
+// of the diagrams, this still makes page loading time shorter.
+
+//defer
+
+// But now, what about the defer attribute?
+// Well, when deferring what happens is that the script
+// is still loaded asynchronously.
+// But the execution of the script
+// is deferred until the end of the HTML parsing.
+
+// So in practice, loading time is similar
+// to the async attribute, but with the key difference
+// that would defer the HTML parsing is never interrupted,
+// because the script is only executed at the end.
+// And many times, this is exactly what we want.
+
+// Now, you might be wondering why I didn't show async
+// and defer in the body yet.
+// And the reason for that is
+// that they simply don't make sense there.
+// Because in the body, fetching and executing the script
+// always happens after parsing the HTML anyway.
+// And so async and defer have no practical effector.
+// All right and so the async
+// and defer attributes have no practical effect here at all.
+// They will make no difference all right.
+// Now there are, of course use cases for all these strategies.
+// So let's now compare them, except, of course,
+// the regular loading in the head,
+// which is completely ruled out.
+
+// Now there are, of course use cases for all these strategies.
+// So let's now compare them, except, of course,
+// the regular loading in the head,
+// which is completely ruled out.
+
+// ASYNC VS DEFER
+
+// ASYNC
+
+// So one important thing about loading an async script is
+// that the DOM content loaded event
+// will not wait for the script
+// to be downloaded and executed.
+// So usually, DOM content loaded,
+// waits for all scripts to execute.
+// But scripts loaded with async are an exception.
+// So with async, DOM content loaded is fired off as soon
+// as the HTML finishes parsing.
+// And this might actually happen
+// when a big script takes a long time to load,
+// like in this example.
+// So notice how the DOM content loaded event appears right
+// after HTML parsing in both these diagrams.
+
+// DEFER
+
+// Now, using defer, on the other hand, forces,
+// the DOM content loaded event to only get fired
+// after the whole script has been downloaded and executed.
+// And so this is the more traditional way
+// that this event works.
+
+// ASYNC
+
+// Another very important aspect is that async scripts
+// are not guaranteed to be executed in the exact order
+// that they are declared in the code.
+// So the script that arrives first gets executed first.
+
+// DEFER
+
+// On the other hand, by using defer,
+// that is not the case.
+// So using the defer attribute guarantees that the scripts
+// are actually executed in the order that they are declared
+// or written in the code.
+// And that is usually what we want to happen.
+
+// CONCLUSION
+
+// DEFER
+
+// using defer in the HTML head is overall the best solution.
+// So you should use it for your own scripts.
+// And for scripts where the order of execution is important.
+// For example, if your script relies
+// on some third party library that you need to include,
+// you will include that library before your own script,
+// so that your script can then use the library's code.
+// And in this case, you have to use defer and not async.
+// Because defer will guarantee the correct order of execution.
+
+// ASYNC
+
+// Now, for third party scripts,
+// where the order does not matter, for example,
+// an analytics software like Google Analytics,
+// or an ad script, or something like that,
+// then in this case, you should totally use async.
+// So for any code that your own code will not need
+// to interact with async is just fine.
+// So it's a good use case for this kind of scripts.
+
+// And I'm saying this because, of course,
+// you can use different loading strategies
+// for different scripts in your web application or website.
+// Okay, now, what's important to note
+// is that only modern browsers support async and defer.
+// And they will basically get ignored in older browsers.
+
+// So if you need to support all browsers,
+// then you need to put your script tag at the end
+// of the body and not in the head.
+// That's because this is actually not a JavaScript feature,
+// but an HTML5 feature.
+// And so you can't really work around this limitation,
+// like you can do with modern JavaScript features
+// by transpiling, or poly-filling.
