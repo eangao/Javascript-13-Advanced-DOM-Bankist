@@ -638,6 +638,7 @@ const maxSlide = slides.length;
 // slides.forEach((s, i) => (s.style.transform = `translateX(${100 * i}%)`));
 // // 0%, 100%, 200%, 300%
 
+// Functions
 const createDots = function () {
   slides.forEach(function (_, i) {
     dotContainer.insertAdjacentHTML(
@@ -651,8 +652,6 @@ const createDots = function () {
     );
   });
 };
-
-createDots();
 
 const activateDot = function (slide) {
   //   So we will select all of the dots,
@@ -677,15 +676,11 @@ const activateDot = function (slide) {
     .classList.add('dots__dot--active');
 };
 
-activateDot(0);
-
 const goToSlide = function (slide) {
   slides.forEach(
     (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
   );
 };
-
-goToSlide(0);
 
 //Next slide
 const nextSlide = function () {
@@ -711,6 +706,15 @@ const prevSlide = function () {
   activateDot(curSlide);
 };
 
+//initialization
+const init = function () {
+  createDots();
+  activateDot(0);
+  goToSlide(0);
+};
+init();
+
+// Event handlers
 btnRight.addEventListener('click', nextSlide);
 btnLeft.addEventListener('click', prevSlide);
 
