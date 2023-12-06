@@ -1949,3 +1949,117 @@ slider();
 ///////////////////////////////////////////////////////////
 // Building a Slider Component: Part 1
 ///////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////
+// Lifecycle DOM Events
+////////////////////////////////////////////////////
+
+// Now to close off this section,
+// let's take a quick look at a couple of different events
+// that occur in the DOM during a webpage's life cycle.
+// And when we say lifecycle,
+// we mean right from the moment
+// that the page is first accessed, until the user leaves it.
+
+//first
+// Now, the first event that we need to talk about
+// is called DOM content loaded.
+// And this event is fired by the document
+// as soon as the HTML is completely parsed,
+// which means that the HTML has been downloaded
+// and been converted to the DOM tree.
+// Also, all scripts must be downloaded and executed
+// before the DOM content loaded event can happen.
+
+// now this event does actually not wait for images and other
+// external resources to load.
+// Okay. So just HTML and JavaScript need to be loaded.
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML parse and DOM tree built', e);
+});
+
+// So this year we can now execute code that should only be
+// executed after the DOM is available.
+// And in fact,
+// we want all our code only to be executed after the DOM is
+// ready.
+
+// So this year we can now execute code that should only be
+// executed after the DOM is available.
+// And in fact,
+// we want all our code only to be executed after the DOM is
+// ready.
+// Right?
+// So does that mean that we should wrap our entire code into
+// an event listener like this?
+// So with a function like this, well, actually, no,
+// we don't need to do that.
+// And that's because we have to script tag,
+// which is the one that imports or a JavaScript into the HTML,
+// right. At the end of the body.
+// So you see it is down here.
+// So basically it's the last thing that is going to be read in
+// the HTML.
+// And so basically the browser will only find or script when
+// the rest of the HTML is already parsed anyway.
+// So when we have to script tag here at the end of the HTML,
+// then we do not need to listen for the DOM content loaded
+
+//2nd
+// next up there is also the load event and the load event is
+// fired by the window. As soon as not only the HTML is parsed,
+// but also all the images and external resources like CSS
+// files are also loaded.
+// So basically when the complete page has finished loading is
+// when this event gets fired.
+window.addEventListener('load', function (event) {
+  console.log('Page fully loaded', event);
+  // when everything was finished, we also got this load event.
+});
+
+//3rd
+// // the last event that I want to show you is the before unload
+// // event, which also gets fired on window.
+// window.addEventListener('beforeunload', function (e) {
+//   //   And this event here is created immediately before a user is
+//   // about to leave a page. So for example,
+//   // after clicking this close button here in the browser tab,
+//   // so we can basically use this event to ask users if they are
+//   // 100% sure that they want to leave the page.
+//   // Now in some browsers to make this work,
+//   // we need to call prevent default here. In Chrome
+//   // it's not necessary, but some browsers require it.
+
+//   e.preventDefault();
+
+//   console.log(e);
+
+//   //   And actually in order to display a leaving confirmation,
+//   // we need to set the return value on the event to an empty
+//   // string.
+//   // So return value and an empty string.
+//   // And this probably looks a bit weird,
+//   // but this is for historical reasons.
+//   e.returnValue = '';
+
+//   //   Now a long time ago,
+//   // developers were actually able to customize the message
+//   // that was displayed here, but then of course,
+//   // many people started to abuse this.
+//   // And so now we can only see it as a generic message.
+//   // So no matter what we write here,
+//   // we will always get this same pop-up.
+// });
+
+// So really please don't abuse
+// this kind of feature because a message like this is of
+// course pretty intrusive and it should only be displayed when
+// necessary.
+// So don't be one of these developers who abuses too much
+// power.
+// So the only time you should prompt the user,
+// if they really want to leave the page is for example,
+// when the user is leaving in the middle of filling out the
+// form, or like writing a blog post or something like that.
+// So a situation in which data could actually be lost by
+// accident.
