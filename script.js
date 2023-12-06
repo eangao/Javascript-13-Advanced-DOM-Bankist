@@ -578,7 +578,7 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 
 allSections.forEach(function (section) {
   sectionObserver.observe(section);
-  section.classList.add('section--hidden');
+  // section.classList.add('section--hidden');
 });
 
 ////////////////////////////////////////////
@@ -618,6 +618,36 @@ const imgObserver = new IntersectionObserver(loadImg, {
 });
 
 imgTargets.forEach(img => imgObserver.observe(img));
+
+///////////////////////////////////////////
+// Slider
+const slides = document.querySelectorAll('.slide');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+
+let curSlide = 0;
+const maxSlide = slides.length;
+
+const slider = document.querySelector('.slider');
+slider.style.transform = 'scale(0.3) translateX(-1200px)';
+slider.style.overflow = 'visible';
+
+slides.forEach((s, i) => (s.style.transform = `translateX(${100 * i}%)`));
+// 0%, 100%, 200%, 300%
+
+//Next slide
+btnRight.addEventListener('click', function () {
+  if (curSlide === maxSlide - 1) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${100 * (i - curSlide)}%)`)
+  );
+});
+//  curSlide = 1: -100%, 0%, 100%, 200%
 
 /////////////////////////////////////////////////////////////////////////
 // How the DOM Really Works
@@ -1795,3 +1825,7 @@ imgTargets.forEach(img => imgObserver.observe(img));
 // in the background without our user noticing that.
 // And so we should probably make these
 // images load a little bit earlier.
+
+///////////////////////////////////////////////////////////
+// Building a Slider Component: Part 1
+///////////////////////////////////////////////////////////
